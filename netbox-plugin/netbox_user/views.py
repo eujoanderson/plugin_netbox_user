@@ -47,7 +47,7 @@ class UserListRuleEditView(generic.ObjectEditView):
     queryset = models.ResourceAccess.objects.all()
 
     form = forms.UserListRuleForm
-
+    
 
 class UserListRuleDeleteView(generic.ObjectDeleteView):
     queryset = models.ResourceAccess.objects.all()

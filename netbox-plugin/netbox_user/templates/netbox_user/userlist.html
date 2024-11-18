@@ -1,8 +1,6 @@
 {% extends 'generic/object.html' %}
 {% load render_table from django_tables2 %}
 
-
-
 {% block content %}
   <div class="row mb-3">
     <div class="col col-md-6">
@@ -20,8 +18,8 @@
               <td>{{ object.rules.count }}</td>
             </tr>
             <tr>
-              <th scope="row" >Status do Usuário</th>
-              <td>{{ object.status_user }}</td>
+              <th scope="row" >Status do usuário</th>
+              <td>{{ object.statususer }}</td>
             </tr>
 
           </table>

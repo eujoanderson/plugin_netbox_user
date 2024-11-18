@@ -3,6 +3,7 @@ from .models import UserList, ResourceAccess
 from utilities.forms.fields import CommentField
 from django import forms
 from netbox.forms import NetBoxModelForm, NetBoxModelFilterSetForm
+from .models import UserList, ResourceAccess, ActionChoices
 
 
 class UserListForm(NetBoxModelForm):
@@ -10,7 +11,7 @@ class UserListForm(NetBoxModelForm):
 
     class Meta:
         model = UserList
-        fields = ('name', 'comments','status_user', 'tags')
+        fields = ('name', 'comments', 'status_user','setor','tags',)
 
 
 class UserListRuleForm(NetBoxModelForm):
@@ -25,11 +26,10 @@ class UserListRuleForm(NetBoxModelForm):
     )
 
     data_expiracao = forms.DateField(
-        widget=forms.DateInput(attrs={'type': 'date'}),
+        widget=forms.DateInput(attrs={'type': 'datetime-local', 'format': '%Y-%m-%dT%H:%M'}),
         required=True,
         label="Data de Expiração"
     )
-
 
     class Meta:
         model = ResourceAccess

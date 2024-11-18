@@ -1,0 +1,70 @@
+{% extends 'generic/object.html' %}
+
+{% block content %}
+  <div class="row mb-3">
+    <div class="col col-md-6">
+      <div class="card">
+        <h5 class="card-header">Permissões</h5>
+        <div class="card-body">
+          <table class="table table-hover attr-table">
+            <tr>
+              <th scope="row">Usuário</th>
+              <td>
+                <a href="{{ object.user.get_absolute_url }}">{{ object.user }}</a>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Index</th>
+              <td>{{ object.recurso }}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      {% include 'inc/panels/custom_fields.html' %}
+      {% include 'inc/panels/tags.html' %}
+	  {% include 'inc/panels/comments.html' %}
+    </div>
+    <div class="col col-md-6">
+      <div class="card">
+        <h5 class="card-header">Details</h5>
+        <div class="card-body">
+          <table class="table table-hover attr-table">
+              <th scope="row">Tipo de Acesso</th>
+              <td>{{ object.tipo_acesso }}</td>
+            </tr>
+            <tr>
+              <th scope="row">Data Concessão</th>
+              <td>{{ object.data_concessao }}</td>
+            </tr>
+            <tr>
+              <th scope="row">Data Expiração</th>
+              <td>{{ object.data_expiracao }}</td>
+            </tr>
+            <tr>
+              <th scope="row">Aprovador</th>
+              <td>{{ object.aprovador }}</td>
+            </tr>
+            <tr>
+              <th scope="row">Justificativa</th>
+              <td>{{ object.justificativa }}</td>
+            </tr>
+            <tr>
+              <th scope="row">Status</th>
+              <td>{{ object.status }}</td>
+            </tr>
+
+			<tr>
+				<th scope="row">Observações</th>
+				<td>{{ object.observacoes }}</td>
+			</tr>
+
+			<tr>
+				<th scope="row">Ambiente</th>
+				<td>{{ object.ambiente }}</td>
+			</tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

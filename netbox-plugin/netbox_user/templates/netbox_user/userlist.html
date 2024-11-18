@@ -1,0 +1,49 @@
+{% extends 'generic/object.html' %}
+{% load render_table from django_tables2 %}
+
+
+
+{% block content %}
+  <div class="row mb-3">
+    <div class="col col-md-6">
+      <div class="card">
+        <h5 class="card-header">Recursos</h5>
+        <div class="card-body">
+          <table class="table table-hover attr-table">
+            <tr>
+              <th scope="row">Usuário</th>
+              <td>{{ object.name }}</td>
+            </tr>
+
+            <tr>
+              <th scope="row">Recursos</th>
+              <td>{{ object.rules.count }}</td>
+            </tr>
+            <tr>
+              <th scope="row" >Status do Usuário</th>
+              <td>{{ object.status_user }}</td>
+            </tr>
+
+          </table>
+        </div>
+      </div>
+      {% include 'inc/panels/custom_fields.html' %}
+    </div>
+    <div class="col col-md-6">
+      {% include 'inc/panels/tags.html' %}
+      {% include 'inc/panels/comments.html' %}
+    </div>
+  </div>
+
+<div class="row">
+  <div class="col col-md-12">
+    <div class="card">
+      <h5 class="card-header">Recursos</h5>
+      <div class="card-body table-responsive">
+          {% render_table recurso %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

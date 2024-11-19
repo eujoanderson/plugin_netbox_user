@@ -1,7 +1,6 @@
-from django.urls import path
+from django.urls import include,path
 from . import models, views
 from netbox.views.generic import ObjectChangeLogView
-
 
 
 urlpatterns = (
@@ -25,6 +24,41 @@ urlpatterns = (
 
     path('rules/<int:pk>/changelog/', ObjectChangeLogView.as_view(), name='resourceaccess_changelog', kwargs={
         'model': models.ResourceAccess
+    }),
+
+
+    # Resources 
+    path('resources/', views.ResourcesListListView.as_view(), name='resources_list'),
+    path('resources/add/', views.ResourcesListEditView.as_view(), name='resources_add'),
+    path('resources/<int:pk>/', views.ResourcesView.as_view(), name='resourceslist'),
+    path('resources/<int:pk>/edit/', views.ResourcesListEditView.as_view(), name='resources_edit'),
+    path('resources/<int:pk>/delete/', views.ResourcesListDeleteView.as_view(), name='resources_delete'),
+
+    path('resources/<int:pk>/changelog/', ObjectChangeLogView.as_view(), name='resources_changelog', kwargs={
+        'model': models.Resources
+    }),
+
+
+    # environment 
+    path('environment/', views.EnvironmentListListView.as_view(), name='environment_list'),
+    path('environment/add/', views.EnvironmentListEditView.as_view(), name='environment_add'),
+    path('environment/<int:pk>/', views.EnvironmentView.as_view(), name='environmentlist'),
+    path('environment/<int:pk>/edit/', views.EnvironmentListEditView.as_view(), name='environment_edit'),
+    path('environment/<int:pk>/delete/', views.EnvironmentListDeleteView.as_view(), name='environment_delete'),
+
+    path('environment/<int:pk>/changelog/', ObjectChangeLogView.as_view(), name='environment_changelog', kwargs={
+        'model': models.Environment
+    }),
+
+    # group 
+    path('group/', views.GroupListListView.as_view(), name='groups_list'),
+    path('group/add/', views.GroupListEditView.as_view(), name='groups_add'),
+    path('group/<int:pk>/', views.GroupView.as_view(), name='groupslist'),
+    path('group/<int:pk>/edit/', views.GroupListEditView.as_view(), name='groups_edit'),
+    path('group/<int:pk>/delete/', views.GroupListDeleteView.as_view(), name='groups_delete'),
+
+    path('group/<int:pk>/changelog/', ObjectChangeLogView.as_view(), name='groups_changelog', kwargs={
+        'model': models.Groups
     }),
 )
 

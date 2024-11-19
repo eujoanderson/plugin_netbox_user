@@ -5,7 +5,10 @@ app_name = 'plugin-user'
 
 router = NetBoxRouter()
 router.register('plugin-user', views.UserListViewSet)
-router.register('plugin-user-rules', views.UserListRuleViewSet)
+router.register('pluginuserrule', views.UserListRuleViewSet, basename='pluginuserrule')
+router.register('resourceslist', views.ResourcesListViewSet, basename='resourceslist')
+router.register('environmentlist', views.EnvironmentListViewSet, basename='environmentlist')
+router.register('grouplist', views.GroupsListViewSet, basename='grouplist')
 
 # Define urlpatterns explicitamente
 urlpatterns = router.urls

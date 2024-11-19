@@ -19,7 +19,12 @@
             </tr>
             <tr>
               <th scope="row" >Status do usuário</th>
-              <td>{{ object.statususer }}</td>
+              <td>{{ object.status_user|capfirst }}</td>
+            </tr>
+
+            <tr>
+              <th scope="row">Setor</th>
+              <td>{{ object.setor|capfirst }}</td>
             </tr>
 
           </table>

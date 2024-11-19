@@ -1,18 +1,6 @@
-from extras.plugins import PluginMenuItem
+from extras.plugins import PluginMenu,PluginMenuItem
 from extras.plugins import PluginMenuButton, PluginMenuItem
 from utilities.choices import ButtonColorChoices
-
-
-menu_items = (
-    PluginMenuItem(
-        link='plugins:netbox_user:userlist_list',
-        link_text='Users'
-    ),
-    PluginMenuItem(
-        link='plugins:netbox_user:resourceaccess_list',
-        link_text='Recursos do Usuário'
-    ),
-)
 
 
 
@@ -35,16 +23,75 @@ userlistrule_buttons = [
 ]
 
 
-menu_items = (
-    PluginMenuItem(
-        link='plugins:netbox_user:userlist_list',
-        link_text='Users',
-        buttons=userlist_buttons
-    ),
-    PluginMenuItem(
-        link='plugins:netbox_user:resourceaccess_list',
-        link_text='Resources User',
-        buttons=userlistrule_buttons
+resources_buttons = [
+    PluginMenuButton(
+        link='plugins:netbox_user:resources_add',
+        title='Add',
+        icon_class='mdi mdi-plus-thick',
+        color=ButtonColorChoices.GREEN
+    )
+]
+
+
+environment_buttons = [
+    PluginMenuButton(
+        link='plugins:netbox_user:environment_add',
+        title='Add',
+        icon_class='mdi mdi-plus-thick',
+        color=ButtonColorChoices.GREEN
+    )
+]
+
+
+groups_buttons = [
+    PluginMenuButton(
+        link='plugins:netbox_user:groups_add',
+        title='Add',
+        icon_class='mdi mdi-plus-thick',
+        color=ButtonColorChoices.GREEN
+    )
+]
+
+
+
+
+
+menu = PluginMenu(
+    label='NETBOX USERS',
+    icon_class="mdi mdi-puzzle ",
+    groups=(
+        ('Usuários e Recursos', 
+            (
+                PluginMenuItem(
+                    link="plugins:netbox_user:userlist_list", 
+                    link_text="Usuários", 
+                    buttons=userlist_buttons
+                ),
+                PluginMenuItem(
+                    link="plugins:netbox_user:resourceaccess_list", 
+                    link_text="Recursos dos Usuários", 
+                    buttons=userlistrule_buttons
+                ),
+            ),
+        ),
+        ('Opções', 
+            (
+                PluginMenuItem(
+                    link="plugins:netbox_user:resources_list", 
+                    link_text="Opções de Recursos",
+					buttons=resources_buttons
+                ),
+                PluginMenuItem(
+                    link="plugins:netbox_user:environment_list", 
+                    link_text="Opções de Ambiente",
+					buttons=environment_buttons
+                ),
+                PluginMenuItem(
+                    link="plugins:netbox_user:groups_list", 
+                    link_text="Opções de Grupos",
+					buttons=groups_buttons
+                ),
+            ),
+        ),
     ),
 )
-

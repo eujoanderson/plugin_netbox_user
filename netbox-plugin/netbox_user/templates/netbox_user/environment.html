@@ -4,12 +4,12 @@
   <div class="row mb-3">
     <div class="col col-md-6">
       <div class="card">
-        <h5 class="card-header">Recurso</h5>
+        <h5 class="card-header">Infos</h5>
         <div class="card-body">
           <table class="table table-hover attr-table">
             <tr>
-              <th scope="row">Index</th>
-              <td>{{ object.index }}</td>
+              <th scope="row">Ambiente</th>
+              <td>{{ object }}</td>
             </tr>
           </table>
         </div>
@@ -18,14 +18,7 @@
       {% include 'inc/panels/tags.html' %}
     </div>
     <div class="col col-md-6">
-      <div class="card">
-        <h5 class="card-header">Details</h5>
-        <div class="card-body">
-          <table class="table table-hover attr-table">
-              Usuários LIST
-          </table>
-        </div>
-      </div>
+      
 
       {% include 'inc/panels/comments.html' %} 
     </div>

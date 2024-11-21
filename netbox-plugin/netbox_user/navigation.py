@@ -53,6 +53,25 @@ groups_buttons = [
 ]
 
 
+approver_buttons = [
+    PluginMenuButton(
+        link='plugins:netbox_user:approver_add',
+        title='Add',
+        icon_class='mdi mdi-plus-thick',
+        color=ButtonColorChoices.GREEN
+    )
+]
+
+
+sector_buttons = [
+    PluginMenuButton(
+        link='plugins:netbox_user:sector_add',
+        title='Add',
+        icon_class='mdi mdi-plus-thick',
+        color=ButtonColorChoices.GREEN
+    )
+]
+
 
 
 
@@ -90,6 +109,18 @@ menu = PluginMenu(
                     link="plugins:netbox_user:groups_list", 
                     link_text="Opções de Grupos",
 					buttons=groups_buttons
+                ),
+				
+                PluginMenuItem(
+                    link="plugins:netbox_user:approver_list", 
+                    link_text="Opções de Aprovador",
+					buttons=approver_buttons
+                ),
+				
+                PluginMenuItem(
+                    link="plugins:netbox_user:sector_list", 
+                    link_text="Opções de Setor",
+					buttons=sector_buttons
                 ),
             ),
         ),

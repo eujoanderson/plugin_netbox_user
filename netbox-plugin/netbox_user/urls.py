@@ -60,5 +60,29 @@ urlpatterns = (
     path('group/<int:pk>/changelog/', ObjectChangeLogView.as_view(), name='groups_changelog', kwargs={
         'model': models.Groups
     }),
+	
+
+    # Approver 
+    path('approver/', views.ApproverListListView.as_view(), name='approver_list'),
+    path('approver/add/', views.ApproverListEditView.as_view(), name='approver_add'),
+    path('approver/<int:pk>/', views.ApproverView.as_view(), name='approverlist'),
+    path('approver/<int:pk>/edit/', views.ApproverListEditView.as_view(), name='approver_edit'),
+    path('approver/<int:pk>/delete/', views.ApproverListDeleteView.as_view(), name='approver_delete'),
+
+    path('approver/<int:pk>/changelog/', ObjectChangeLogView.as_view(), name='approver_changelog', kwargs={
+        'model': models.Approver
+    }),
+	
+
+    # Sector 
+    path('sector/', views.SectorListListView.as_view(), name='sector_list'),
+    path('sector/add/', views.SectorListEditView.as_view(), name='sector_add'),
+    path('sector/<int:pk>/', views.SectorView.as_view(), name='sectorlist'),
+    path('sector/<int:pk>/edit/', views.SectorListEditView.as_view(), name='sector_edit'),
+    path('sector/<int:pk>/delete/', views.SectorListDeleteView.as_view(), name='sector_delete'),
+
+    path('sector/<int:pk>/changelog/', ObjectChangeLogView.as_view(), name='sector_changelog', kwargs={
+        'model': models.Sector
+    }),
 )
 

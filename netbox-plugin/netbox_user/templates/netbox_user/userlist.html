@@ -22,10 +22,14 @@
               <td>{{ object.status_user|capfirst }}</td>
             </tr>
 
-            <tr>
-              <th scope="row">Setor</th>
-              <td>{{ object.setor|capfirst }}</td>
-            </tr>
+            <th scope="row">Setor</th>
+            <td>
+              {% if object.setor.exists %}
+                {{ object.setor.all|join:", " }}
+              {% else %}
+                Nenhum ambiente associado
+              {% endif %}
+            </td>
 
           </table>
         </div>

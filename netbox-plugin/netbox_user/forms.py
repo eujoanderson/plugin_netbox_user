@@ -3,7 +3,7 @@ from .models import UserList, ResourceAccess
 from utilities.forms.fields import CommentField
 from django import forms
 from netbox.forms import NetBoxModelForm, NetBoxModelFilterSetForm
-from .models import UserList, ResourceAccess, Resources, Environment,Groups
+from .models import UserList, ResourceAccess, Resources, Environment,Groups,Approver, Sector
 from django.core.exceptions import ValidationError
 
 
@@ -24,6 +24,10 @@ class UserListRuleForm(NetBoxModelForm):
 
     user = forms.ModelChoiceField(queryset=UserList.objects.all(), required=True)
 
+    aprovador = forms.ModelChoiceField(queryset=Approver.objects.all(), required=True)
+
+    ambiente = forms.ModelChoiceField(queryset=Environment.objects.all(), required=True)
+
     data_concessao = forms.DateField(
         widget=forms.DateInput(attrs={'type': 'date'}),
         required=True,
@@ -36,14 +40,11 @@ class UserListRuleForm(NetBoxModelForm):
         label="Data de Expiração"
     )
 
-    observacoes = CommentField(label="Comentário")
-
-
     class Meta:
         model = ResourceAccess
         fields = (
             'user','recurso', 'tipo_acesso', 'data_concessao',
-            'data_expiracao', 'aprovador', 'justificativa', 'status','observacoes','ambiente','tags'
+            'data_expiracao', 'aprovador', 'justificativa', 'status','ambiente','tags'
         )
 
 
@@ -67,7 +68,7 @@ class EnvironmentForm(NetBoxModelForm):
     class Meta:
         model = Environment
         fields = (
-            'environment',  'comments', 'tags'
+            'ambiente',  'comments', 'tags'
         )
 
 class GroupForm(NetBoxModelForm):
@@ -76,8 +77,28 @@ class GroupForm(NetBoxModelForm):
     class Meta:
         model = Groups
         fields = (
-            'group',  'comments', 'tags'
+            'grupo',  'comments', 'tags'
         )
+
+class ApproverForm(NetBoxModelForm):
+
+    comments = CommentField()
+    class Meta:
+        model = Approver
+        fields = (
+            'aprovador',  'comments', 'tags'
+        )
+
+class SectorForm(NetBoxModelForm):
+
+    comments = CommentField()
+    class Meta:
+        model = Sector
+        fields = (
+            'setor',  'comments', 'tags'
+        )
+
+
 
 class UserListRuleFilterForm(NetBoxModelFilterSetForm):
     comments = CommentField()

@@ -1,7 +1,7 @@
 import django_tables2 as tables
 
 from netbox.tables import NetBoxTable, ChoiceFieldColumn
-from .models import UserList, ResourceAccess, Resources, Environment,Groups
+from .models import UserList, ResourceAccess, Resources, Environment,Groups, Approver, Sector
 from netbox.tables.columns import TagColumn  
 
 class UserListTable(NetBoxTable):
@@ -9,19 +9,9 @@ class UserListTable(NetBoxTable):
         linkify=True
     )
 
-    groups = tables.Column(
-        verbose_name="Grupo",
-        accessor='groups.name',
-        linkify=True
-    )
+    groups = tables.ManyToManyColumn()
 
-    def render_groups(self, value):
-        """
-        Renderiza os nomes dos grupos associados ao usuário.
-        Assume que 'value' é uma lista de objetos de grupos.
-        """
-        # Se 'value' for uma lista de grupos, retorna uma string com os nomes
-        return ", ".join([group.name for group in value])
+    setor = tables.ManyToManyColumn()
 
     rules_count = tables.Column(
         verbose_name="Recursos",
@@ -60,24 +50,22 @@ class UserListRuleTable(NetBoxTable):
     tipo_acesso = tables.Column(verbose_name="Tipo Acesso")
     data_concessao = tables.DateColumn(verbose_name="Data Concessão")
     data_expiracao = tables.DateColumn(verbose_name="Data Expiração")
-    aprovador = tables.Column(verbose_name="Aprovador")
+    aprovador = tables.ManyToManyColumn(verbose_name="Aprovador")
     justificativa = tables.Column(verbose_name="Justificativa")
-    observacoes = tables.Column(verbose_name="Observações")
-    ambiente = tables.Column(verbose_name="Ambiente")
+    ambiente = tables.ManyToManyColumn(verbose_name="Ambiente")
 
     tipo_acesso = ChoiceFieldColumn()
-    ambiente = ChoiceFieldColumn()
     status = ChoiceFieldColumn()
     
     class Meta(NetBoxTable.Meta):
         model = ResourceAccess
         fields = (
             'pk', 'id', 'recurso', 'user','tipo_acesso', 'data_concessao',
-            'data_expiracao', 'aprovador', 'justificativa', 'status','observacoes','ambiente', 'tags'
+            'data_expiracao', 'aprovador', 'justificativa', 'status','ambiente', 'tags'
         )
         default_columns = (
             'recurso','user', 'tipo_acesso', 'data_concessao',
-            'data_expiracao', 'aprovador', 'justificativa', 'status','observacoes','ambiente', 'tags'
+            'data_expiracao', 'aprovador', 'justificativa', 'status','ambiente', 'tags'
         )
 
 
@@ -98,7 +86,7 @@ class ResourcesTable(NetBoxTable):
 
 
 class EnvironmentTable(NetBoxTable):
-    environment = tables.Column(
+    ambiente = tables.Column(
         linkify=True
     )
 
@@ -106,12 +94,12 @@ class EnvironmentTable(NetBoxTable):
 
     class Meta(NetBoxTable.Meta):
         model = Environment
-        fields = ('pk', 'id', 'environment',  'comments', 'tags')
-        default_columns = ('environment',  'comments', 'tags' )
+        fields = ('pk', 'id', 'ambiente',  'comments', 'tags')
+        default_columns = ('ambiente',  'comments', 'tags' )
 
 
 class GroupTable(NetBoxTable):
-    group = tables.Column(
+    grupo = tables.Column(
         linkify=True
     )
 
@@ -119,8 +107,34 @@ class GroupTable(NetBoxTable):
 
     class Meta(NetBoxTable.Meta):
         model = Groups
-        fields = ('pk', 'id', 'group',  'comments', 'tags')
-        default_columns = ('group',  'comments', 'tags' )
+        fields = ('pk', 'id', 'grupo',  'comments', 'tags')
+        default_columns = ('grupo',  'comments', 'tags' )
 
+
+
+class ApproverTable(NetBoxTable):
+    aprovador = tables.Column(
+        linkify=True
+    )
+
+    tags = TagColumn()
+
+    class Meta(NetBoxTable.Meta):
+        model = Approver
+        fields = ('pk', 'id', 'aprovador',  'comments', 'tags')
+        default_columns = ('aprovador',  'comments', 'tags' )
+
+
+class SectorTable(NetBoxTable):
+    setor = tables.Column(
+        linkify=True
+    )
+
+    tags = TagColumn()
+
+    class Meta(NetBoxTable.Meta):
+        model = Sector
+        fields = ('pk', 'id', 'setor',  'comments', 'tags')
+        default_columns = ('setor',  'comments', 'tags' )
 
 

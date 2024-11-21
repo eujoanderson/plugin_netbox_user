@@ -6,7 +6,7 @@ class UserListRuleFilterSet(NetBoxModelFilterSet):
     class Meta:
         model = ResourceAccess
         fields = ('id', 'user', 'recurso', 'tipo_acesso', 'data_concessao',
-                  'data_expiracao', 'aprovador', 'justificativa', 'status', 'observacoes', 'ambiente',)
+                  'data_expiracao', 'aprovador', 'justificativa', 'status', 'ambiente',)
     
     def search(self, queryset, name, value):
         return queryset.filter(description__icontains=value)

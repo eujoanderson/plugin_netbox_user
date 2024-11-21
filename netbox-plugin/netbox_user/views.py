@@ -59,9 +59,6 @@ class UserListRuleDeleteView(generic.ObjectDeleteView):
 
 # RESOURCES LIST
 class ResourcesView(generic.ObjectView):
-    queryset = models.UserList.objects.annotate(
-        rule_count=Count('rules')
-    )
     queryset = models.Resources.objects.all()
 
 
@@ -119,3 +116,43 @@ class GroupListEditView(generic.ObjectEditView):
 
 class GroupListDeleteView(generic.ObjectDeleteView):
     queryset = models.Groups.objects.all()
+
+
+
+# Approver LIST
+class ApproverView(generic.ObjectView):
+    queryset = models.Approver.objects.all()
+
+
+class ApproverListListView(generic.ObjectListView):
+    queryset = models.Approver.objects.all()
+
+    table = tables.ApproverTable
+
+class ApproverListEditView(generic.ObjectEditView):
+    queryset = models.Approver.objects.all()
+    form = forms.ApproverForm
+
+
+class ApproverListDeleteView(generic.ObjectDeleteView):
+    queryset = models.Approver.objects.all()
+
+
+
+# Approver LIST
+class SectorView(generic.ObjectView):
+    queryset = models.Sector.objects.all()
+
+
+class SectorListListView(generic.ObjectListView):
+    queryset = models.Sector.objects.all()
+
+    table = tables.SectorTable
+
+class SectorListEditView(generic.ObjectEditView):
+    queryset = models.Sector.objects.all()
+    form = forms.SectorForm
+
+
+class SectorListDeleteView(generic.ObjectDeleteView):
+    queryset = models.Sector.objects.all()

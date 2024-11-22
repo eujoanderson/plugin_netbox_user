@@ -24,9 +24,11 @@ class UserListRuleForm(NetBoxModelForm):
 
     user = forms.ModelChoiceField(queryset=UserList.objects.all(), required=True)
 
-    aprovador = forms.ModelChoiceField(queryset=Approver.objects.all(), required=True)
+    aprovador = forms.ModelMultipleChoiceField(queryset=Approver.objects.all(), required=True)
 
-    ambiente = forms.ModelChoiceField(queryset=Environment.objects.all(), required=True)
+    ambiente = forms.ModelMultipleChoiceField(queryset=Environment.objects.all(), required=True)
+
+    comments = CommentField()
 
     data_concessao = forms.DateField(
         widget=forms.DateInput(attrs={'type': 'date'}),
@@ -44,7 +46,7 @@ class UserListRuleForm(NetBoxModelForm):
         model = ResourceAccess
         fields = (
             'user','recurso', 'tipo_acesso', 'data_concessao',
-            'data_expiracao', 'aprovador', 'justificativa', 'status','ambiente','tags'
+            'data_expiracao', 'aprovador', 'justificativa', 'status','ambiente','recurso','comments','tags'
         )
 
 

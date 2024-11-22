@@ -17,13 +17,13 @@
             <tr>
               <th scope="row">Setor</th>
               <td>
-                <a href="{{ object.user.get_absolute_url }}">{{ object.user.setor|capfirst }}</a>
+                <a href="{{ object.user.get_absolute_url }}"> {% if object.user.setor.exists %}{{ object.user.setor.all|join:", " }}{% endif %}</a>
               </td>
             </tr>
             
             <tr>
               <th scope="row">Tipo de Acesso</th>
-              <td>{{ object.tipo_acesso }}</td>
+              <td>{{ object.tipo_acesso|capfirst }}</td>
             </tr>
             <tr>
               <th scope="row">Data Concessão</th>
@@ -35,7 +35,11 @@
             </tr>
             <tr>
               <th scope="row">Aprovador</th>
-              <td>{{ object.aprovador }}</td>
+              <td>
+                {% if object.aprovador.exists %}
+                {{ object.aprovador.all|join:", " }}
+                {% endif %}
+              </td>
             </tr>
             <tr>
               <th scope="row">Status</th>
@@ -43,14 +47,19 @@
             </tr>
             <tr>
               <th scope="row">Ambiente</th>
-              <td>{{ object.ambiente|capfirst }}</td>
+              <td>
+                {% if object.ambiente.exists %}
+                {{ object.ambiente.all|join:", " }}
+                {% endif %}
+            </td>
             </tr>
 
           </table>
         </div>
+
       </div>
       {% include 'inc/panels/custom_fields.html' %}
-      {% include 'inc/panels/tags.html' %}
+
 
     </div>
     <div class="col col-md-6">
@@ -65,7 +74,7 @@
         </div>
       </div>
       {% include 'inc/panels/comments.html' %}
-
+      {% include 'inc/panels/tags.html' %}
     </div>
   </div>
 {% endblock content %}

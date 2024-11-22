@@ -28,7 +28,7 @@ class UserListTable(NetBoxTable):
 
     class Meta(NetBoxTable.Meta):
         model = UserList
-        fields = ('pk', 'id', 'name', 'groups', 'comments', 'status_user','tags','setor', 'rules_count' )
+        fields = ('pk', 'id', 'name', 'groups', 'comments', 'status_user','tags','setor','rules_count' )
         default_columns = ('name', 'groups','status_user','tags','setor', 'rules_count' )
 
 
@@ -41,10 +41,6 @@ class UserListRuleTable(NetBoxTable):
         linkify=True
     )
 
-    recurso = tables.Column(
-        linkify=True
-    )
-
     tags = TagColumn()
 
     tipo_acesso = tables.Column(verbose_name="Tipo Acesso")
@@ -53,6 +49,7 @@ class UserListRuleTable(NetBoxTable):
     aprovador = tables.ManyToManyColumn(verbose_name="Aprovador")
     justificativa = tables.Column(verbose_name="Justificativa")
     ambiente = tables.ManyToManyColumn(verbose_name="Ambiente")
+    recurso = tables.ManyToManyColumn(linkify=True)
 
     tipo_acesso = ChoiceFieldColumn()
     status = ChoiceFieldColumn()
@@ -61,11 +58,11 @@ class UserListRuleTable(NetBoxTable):
         model = ResourceAccess
         fields = (
             'pk', 'id', 'recurso', 'user','tipo_acesso', 'data_concessao',
-            'data_expiracao', 'aprovador', 'justificativa', 'status','ambiente', 'tags'
+            'data_expiracao', 'aprovador', 'justificativa', 'status','ambiente','comments','tags'
         )
         default_columns = (
             'recurso','user', 'tipo_acesso', 'data_concessao',
-            'data_expiracao', 'aprovador', 'justificativa', 'status','ambiente', 'tags'
+            'data_expiracao', 'aprovador', 'justificativa', 'status','ambiente','comments','tags'
         )
 
 
@@ -136,5 +133,4 @@ class SectorTable(NetBoxTable):
         model = Sector
         fields = ('pk', 'id', 'setor',  'comments', 'tags')
         default_columns = ('setor',  'comments', 'tags' )
-
 

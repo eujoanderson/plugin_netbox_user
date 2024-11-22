@@ -85,7 +85,7 @@ class NestedEnvironmentListSerializer(WritableNestedSerializer):
 
     class Meta:
         model = Environment
-        fields = ('id', 'recurso', 'comments', 'tags','url')
+        fields = ('id', 'ambiente', 'comments', 'tags','url')
 ### ///// ENVIRONMENT
 
 

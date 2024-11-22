@@ -26,8 +26,6 @@
             <td>
               {% if object.setor.exists %}
                 {{ object.setor.all|join:", " }}
-              {% else %}
-                Nenhum ambiente associado
               {% endif %}
             </td>
 

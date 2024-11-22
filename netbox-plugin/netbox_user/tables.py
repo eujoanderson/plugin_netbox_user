@@ -49,7 +49,7 @@ class UserListRuleTable(NetBoxTable):
     aprovador = tables.ManyToManyColumn(verbose_name="Aprovador")
     justificativa = tables.Column(verbose_name="Justificativa")
     ambiente = tables.ManyToManyColumn(verbose_name="Ambiente")
-    recurso = tables.ManyToManyColumn(linkify=True)
+    recurso = tables.Column(linkify=True)
 
     tipo_acesso = ChoiceFieldColumn()
     status = ChoiceFieldColumn()

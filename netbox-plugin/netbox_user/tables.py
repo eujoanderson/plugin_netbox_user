@@ -58,11 +58,11 @@ class UserListRuleTable(NetBoxTable):
         model = ResourceAccess
         fields = (
             'pk', 'id', 'recurso', 'user','tipo_acesso', 'data_concessao',
-            'data_expiracao', 'aprovador', 'justificativa', 'status','ambiente','comments','tags'
+            'data_expiracao', 'aprovador', 'justificativa', 'status','ambiente','tags'
         )
         default_columns = (
             'recurso','user', 'tipo_acesso', 'data_concessao',
-            'data_expiracao', 'aprovador', 'justificativa', 'status','ambiente','comments','tags'
+            'data_expiracao', 'aprovador', 'justificativa', 'status','ambiente','tags'
         )
 
 

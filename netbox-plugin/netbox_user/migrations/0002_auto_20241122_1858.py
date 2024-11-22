@@ -12,6 +12,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('extras', '0105_customfield_min_max_values'),
+        ('netbox_user', '0001_initial'),
     ]
 
     operations = [

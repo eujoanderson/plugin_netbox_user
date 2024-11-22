@@ -11,17 +11,17 @@ class Resources(NetBoxModel):
     recurso = models.CharField(max_length=100, blank=True)
 
     comments = models.TextField(blank=True)
-    index = models.IntegerField()
 
     class Meta:
-        ordering = ('recurso', 'index')
+        ordering = ('recurso',)
         verbose_name = "Recurso"
 
     def __str__(self):
-        return str(self.recurso)
+        return self.recurso
     
     def get_absolute_url(self):
         return reverse('plugins:netbox_user:resourceslist', args=[self.pk])
+
     
 
     
@@ -30,17 +30,16 @@ class Environment(NetBoxModel):
     ambiente = models.CharField(max_length=100, blank=True)
     comments = models.TextField(blank=True)
 
-    index = models.IntegerField()
-
     class Meta:
-        ordering = ('ambiente', 'index')
+        ordering = ('ambiente', )
         verbose_name = "Ambiente"
 
     def __str__(self):
-        return str(self.ambiente)
+        return self.ambiente
     
     def get_absolute_url(self):
         return reverse('plugins:netbox_user:environmentlist', args=[self.pk])
+
 
 
 
@@ -49,17 +48,16 @@ class Approver(NetBoxModel):
     aprovador = models.CharField(max_length=100, blank=True)
     comments = models.TextField(blank=True)
 
-    index = models.IntegerField()
-
     class Meta:
-        ordering = ('aprovador', 'index')
+        ordering = ('aprovador', )
         verbose_name = "Aprovador"
 
     def __str__(self):
-        return str(self.aprovador)
+        return self.aprovador
     
     def get_absolute_url(self):
         return reverse('plugins:netbox_user:approverlist', args=[self.pk])
+
 
 
 
@@ -69,10 +67,8 @@ class Sector(NetBoxModel):
     setor = models.CharField(max_length=100, blank=True)
     comments = models.TextField(blank=True)
 
-    index = models.IntegerField()
-
     class Meta:
-        ordering = ('setor', 'index')
+        ordering = ('setor',)
         verbose_name = "Setor"
 
     def __str__(self):
@@ -81,13 +77,6 @@ class Sector(NetBoxModel):
     def get_absolute_url(self):
         return reverse('plugins:netbox_user:sectorlist', args=[self.pk])
 
-    def save(self, *args, **kwargs):
-        # Auto-generate the index if it's not provided
-        if self.index is None:
-            # Find the max index for the user and increment it
-            last_index = Sector.objects.filter(setor=self.setor).aggregate(Max('index'))['index__max']
-            self.index = (last_index or 0) + 1  # Start from 1 if no records exist
-        super().save(*args, **kwargs)
 
 
 
@@ -132,10 +121,8 @@ class Groups(NetBoxModel):
     grupo = models.CharField(max_length=100, blank=True)
     comments = models.TextField(blank=True)
 
-    index = models.IntegerField()
-
     class Meta:
-        ordering = ('grupo', 'index')
+        ordering = ('grupo', )
         verbose_name = "Grupo"
 
     def __str__(self):
@@ -144,13 +131,6 @@ class Groups(NetBoxModel):
     def get_absolute_url(self):
         return reverse('plugins:netbox_user:groupslist', args=[self.pk])
 
-    def save(self, *args, **kwargs):
-        # Auto-generate the index if it's not provided
-        if self.index is None:
-            # Find the max index for the user and increment it
-            last_index = Groups.objects.filter(grupo=self.grupo).aggregate(Max('index'))['index__max']
-            self.index = (last_index or 0) + 1  # Start from 1 if no records exist
-        super().save(*args, **kwargs)
 
 
 # Modelo para o usuário
@@ -169,8 +149,6 @@ class UserList(NetBoxModel):
         choices=ActionChoicesStatusUserColor._choices,
         verbose_name="Status User"
     )
-
-    setor = models.ManyToManyField(Sector, blank=True)
 
     class Meta:
         ordering = ('name',)
@@ -199,6 +177,9 @@ class ResourceAccess(NetBoxModel):
         related_name='rules'
     )
 
+
+
+
     index = models.IntegerField()
 
     comments = models.TextField(blank=True)
@@ -207,7 +188,7 @@ class ResourceAccess(NetBoxModel):
         max_length=30
     )
 
-    recurso = models.ManyToManyField(Resources, blank=True)  # Nome ou caminho do recurso
+    
 
     tipo_acesso = models.CharField(
         choices=ActionChoicesType._choices,
@@ -216,22 +197,29 @@ class ResourceAccess(NetBoxModel):
 
     data_concessao = models.DateTimeField()
     data_expiracao = models.DateTimeField()
-    aprovador = models.ManyToManyField(Approver, blank=True)
+
     justificativa = models.TextField(blank=True)
 
-    ambiente = models.ManyToManyField(Environment, blank=True)
+    
 
     status = models.CharField(
         max_length=30,
         choices=ActionChoices._choices,
     )
+    ambiente = models.ManyToManyField(Environment, blank=True)
+    
+    aprovador = models.ManyToManyField(Approver, blank=True)
+
+    recurso = models.ManyToManyField(Resources, blank=True)  # Nome ou caminho do recurso
+
 
     class Meta:
         ordering = ('user', 'index')
         verbose_name = "Resource User"
 
     def __str__(self):
-        return str(self.recurso)
+        recursos_nome = ", ".join([recurso.recurso for recurso in self.recurso.all()]) 
+        return recursos_nome
     
     def get_status_color(self):
         return ActionChoices.colors.get(self.status)
@@ -245,7 +233,6 @@ class ResourceAccess(NetBoxModel):
     def save(self, *args, **kwargs):
         # Auto-generate the index if it's not provided
         if self.index is None:
-            # Find the max index for the user and increment it
             last_index = ResourceAccess.objects.filter(user=self.user).aggregate(Max('index'))['index__max']
             self.index = (last_index or 0) + 1  # Start from 1 if no records exist
         super().save(*args, **kwargs)

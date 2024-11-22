@@ -24,6 +24,8 @@ class UserListRuleForm(NetBoxModelForm):
 
     user = forms.ModelChoiceField(queryset=UserList.objects.all(), required=True)
 
+    recurso = forms.ModelChoiceField(queryset=Resources.objects.all(), required=True)
+
     aprovador = forms.ModelMultipleChoiceField(queryset=Approver.objects.all(), required=True)
 
     ambiente = forms.ModelMultipleChoiceField(queryset=Environment.objects.all(), required=True)

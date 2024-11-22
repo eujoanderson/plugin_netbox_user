@@ -22,9 +22,7 @@ class Resources(NetBoxModel):
     def get_absolute_url(self):
         return reverse('plugins:netbox_user:resourceslist', args=[self.pk])
 
-    
 
-    
 
 class Environment(NetBoxModel):
     ambiente = models.CharField(max_length=100, blank=True)
@@ -39,9 +37,6 @@ class Environment(NetBoxModel):
     
     def get_absolute_url(self):
         return reverse('plugins:netbox_user:environmentlist', args=[self.pk])
-
-
-
 
 
 class Approver(NetBoxModel):
@@ -177,9 +172,6 @@ class ResourceAccess(NetBoxModel):
         related_name='rules'
     )
 
-
-
-
     index = models.IntegerField()
 
     comments = models.TextField(blank=True)
@@ -187,8 +179,6 @@ class ResourceAccess(NetBoxModel):
     action = models.CharField(
         max_length=30
     )
-
-    
 
     tipo_acesso = models.CharField(
         choices=ActionChoicesType._choices,
@@ -200,26 +190,31 @@ class ResourceAccess(NetBoxModel):
 
     justificativa = models.TextField(blank=True)
 
-    
+    recurso = models.ForeignKey(
+        to=Resources,
+        on_delete=models.CASCADE,
+        related_name='rules'
+    )
+
+    aprovador = models.ForeignKey(
+        to=Approver,
+        on_delete=models.CASCADE,
+        related_name='rules'
+    )
+
+    ambiente = models.ManyToManyField(Environment, blank=True)
 
     status = models.CharField(
         max_length=30,
         choices=ActionChoices._choices,
     )
-    ambiente = models.ManyToManyField(Environment, blank=True)
-    
-    aprovador = models.ManyToManyField(Approver, blank=True)
-
-    recurso = models.ManyToManyField(Resources, blank=True)  # Nome ou caminho do recurso
-
 
     class Meta:
         ordering = ('user', 'index')
         verbose_name = "Resource User"
 
     def __str__(self):
-        recursos_nome = ", ".join([recurso.recurso for recurso in self.recurso.all()]) 
-        return recursos_nome
+        return self.recurso.recurso
     
     def get_status_color(self):
         return ActionChoices.colors.get(self.status)
@@ -236,12 +231,3 @@ class ResourceAccess(NetBoxModel):
             last_index = ResourceAccess.objects.filter(user=self.user).aggregate(Max('index'))['index__max']
             self.index = (last_index or 0) + 1  # Start from 1 if no records exist
         super().save(*args, **kwargs)
-
-
-
-
-
-
-
-
-

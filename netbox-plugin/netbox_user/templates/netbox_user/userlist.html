@@ -25,10 +25,11 @@
             <th scope="row">Setor</th>
             <td>
               {% if object.setor.exists %}
-                {{ object.setor.all|join:", " }}
+                {% for setor in object.setor.all %}
+                  <a href="{{ setor.get_absolute_url }}">{{ setor }}</a>{% if not forloop.last %}, {% endif %}
+                {% endfor %}
               {% endif %}
             </td>
-
           </table>
         </div>
       </div>

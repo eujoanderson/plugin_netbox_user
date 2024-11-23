@@ -2,7 +2,8 @@ import django_tables2 as tables
 
 from netbox.tables import NetBoxTable, ChoiceFieldColumn
 from .models import UserList, ResourceAccess, Resources, Environment,Groups, Approver, Sector
-from netbox.tables.columns import TagColumn  
+from netbox.tables.columns import TagColumn
+from django.urls import reverse
 
 class UserListTable(NetBoxTable):
     name = tables.Column(
@@ -28,8 +29,8 @@ class UserListTable(NetBoxTable):
 
     class Meta(NetBoxTable.Meta):
         model = UserList
-        fields = ('pk', 'id', 'name', 'groups', 'comments', 'status_user','tags','setor','rules_count' )
-        default_columns = ('name', 'groups','status_user','tags','setor', 'rules_count' )
+        fields = ('pk', 'id', 'name', 'groups', 'comments', 'status_user','setor','tags','rules_count' )
+        default_columns = ('name', 'groups','status_user','setor', 'tags','rules_count' )
 
 
 class UserListRuleTable(NetBoxTable):
@@ -46,10 +47,14 @@ class UserListRuleTable(NetBoxTable):
     tipo_acesso = tables.Column(verbose_name="Tipo Acesso")
     data_concessao = tables.DateColumn(verbose_name="Data Concessão")
     data_expiracao = tables.DateColumn(verbose_name="Data Expiração")
-    aprovador = tables.ManyToManyColumn(verbose_name="Aprovador")
+    aprovador = tables.Column(verbose_name="Aprovador")
     justificativa = tables.Column(verbose_name="Justificativa")
     ambiente = tables.ManyToManyColumn(verbose_name="Ambiente")
-    recurso = tables.Column(linkify=True)
+    
+    recurso = tables.Column(
+        linkify=lambda record: reverse('plugins:netbox_user:pluginuserrule', kwargs={'pk': record.pk})
+    )
+
 
     tipo_acesso = ChoiceFieldColumn()
     status = ChoiceFieldColumn()
@@ -133,4 +138,3 @@ class SectorTable(NetBoxTable):
         model = Sector
         fields = ('pk', 'id', 'setor',  'comments', 'tags')
         default_columns = ('setor',  'comments', 'tags' )
-

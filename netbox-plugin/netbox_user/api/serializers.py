@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from netbox.api.serializers import NetBoxModelSerializer
-from ..models import UserList, ResourceAccess, Resources, Environment, Groups, Approver, Sector
+from ..models import UserList, ResourceAccess, Resources, Environment, Groups, Approver, Sector, ResourceGroups
 from netbox.api.serializers import NetBoxModelSerializer, WritableNestedSerializer
 
 
@@ -206,15 +206,37 @@ class NestedSectorListSerializer(WritableNestedSerializer):
 
 
 
+### Resource Groups
+class ResourceGroupsSerializer(NetBoxModelSerializer):
+
+    class Meta:
+        model = ResourceGroups
+        fields = (
+            'id', 'recurso','groupslist', 'tipo_acesso', 'aprovador', 'ambiente','comments'
+        )
+
+class ResourceGroupsListSerializer(NetBoxModelSerializer):
+    url = serializers.HyperlinkedIdentityField(
+            view_name='plugins-api:netbox_user-api:resourcegroups-detail' 
+        )
+    
+    
+    class Meta:
+        model = ResourceGroups
+        fields = (
+            'id', 'recurso','groupslist', 'tipo_acesso', 'aprovador','ambiente','comments', 'url'
+        )
 
 
+class NestedResourceGroupsListSerializer(WritableNestedSerializer):
+    url = serializers.HyperlinkedIdentityField(
+        view_name='plugins-api:netbox_user-api:resourcegroups-detail'
+    )
 
-
-
-
-
-
-
+    class Meta:
+        model = ResourceGroups
+        fields = ('id', 'recurso','groupslist', 'tipo_acesso', 'aprovador', 'ambiente','comments','url')
+### ///// Sector
 
 
 class NestedAccessListSerializer(WritableNestedSerializer):
@@ -228,7 +250,7 @@ class NestedAccessListSerializer(WritableNestedSerializer):
 
 class NestedAccessListRuleSerializer(WritableNestedSerializer):
     url = serializers.HyperlinkedIdentityField(
-        view_name='plugins-api:netbox_user-api:-api:pluginuserrule-detail'
+        view_name='plugins-api:netbox_user-api:pluginuserrule-detail'
     )
 
     class Meta:

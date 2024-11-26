@@ -8,7 +8,7 @@ from extras.models import Tag
 
 
 class Resources(NetBoxModel):
-    recurso = models.CharField(max_length=100, blank=True)
+    recurso = models.CharField(max_length=100,unique=True, blank=True)
 
     comments = models.TextField(blank=True)
 
@@ -21,11 +21,13 @@ class Resources(NetBoxModel):
     
     def get_absolute_url(self):
         return reverse('plugins:netbox_user:resourceslist', args=[self.pk])
+    
+  
 
 
 
 class Environment(NetBoxModel):
-    ambiente = models.CharField(max_length=100, blank=True)
+    ambiente = models.CharField(max_length=100,unique=True, blank=True)
     comments = models.TextField(blank=True)
 
     class Meta:
@@ -40,7 +42,7 @@ class Environment(NetBoxModel):
 
 
 class Approver(NetBoxModel):
-    aprovador = models.CharField(max_length=100, blank=True)
+    aprovador = models.CharField(max_length=100,unique=True, blank=True)
     comments = models.TextField(blank=True)
 
     class Meta:
@@ -54,12 +56,8 @@ class Approver(NetBoxModel):
         return reverse('plugins:netbox_user:approverlist', args=[self.pk])
 
 
-
-
-
-
 class Sector(NetBoxModel):
-    setor = models.CharField(max_length=100, blank=True)
+    setor = models.CharField(max_length=100,unique=True, blank=True)
     comments = models.TextField(blank=True)
 
     class Meta:
@@ -113,7 +111,7 @@ class ActionChoicesType(ChoiceSet):
 
 # Modelo para grupos
 class Groups(NetBoxModel):
-    grupo = models.CharField(max_length=100, blank=True)
+    grupo = models.CharField(max_length=100, unique=True, blank=True)
     comments = models.TextField(blank=True)
 
     class Meta:
@@ -130,7 +128,7 @@ class Groups(NetBoxModel):
 
 # Modelo para o usuário
 class UserList(NetBoxModel):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100,unique=True)
     comments = models.TextField(blank=True)
 
     groups = models.ManyToManyField(Groups,blank=True)
@@ -213,6 +211,8 @@ class ResourceAccess(NetBoxModel):
         ordering = ('user', 'index')
         verbose_name = "Resource User"
 
+        unique_together = ('user', 'recurso')
+
     def __str__(self):
         return self.recurso.recurso
     
@@ -229,5 +229,64 @@ class ResourceAccess(NetBoxModel):
         # Auto-generate the index if it's not provided
         if self.index is None:
             last_index = ResourceAccess.objects.filter(user=self.user).aggregate(Max('index'))['index__max']
+            self.index = (last_index or 0) + 1  # Start from 1 if no records exist
+        super().save(*args, **kwargs)
+
+    ## Falta realizar o processo ainda
+    def clone(self):
+        attrs = super().clone()
+        attrs['extra-value'] = 123
+        return attrs
+    
+
+
+
+class ResourceGroups(NetBoxModel):
+    index = models.IntegerField()
+
+    groupslist = models.ForeignKey(
+        to=Groups,
+        on_delete=models.CASCADE,
+        related_name='resource_group_rules',
+        #unique=True
+    )
+
+    recurso = models.ForeignKey(
+        to=Resources,
+        on_delete=models.CASCADE,
+        related_name='resource_rules'
+    )
+
+    tipo_acesso = models.CharField(
+        choices=ActionChoicesType._choices,
+        blank=True
+    )
+
+    aprovador = models.ForeignKey(
+        to=Approver,
+        on_delete=models.CASCADE,
+        related_name='resource_aprovador'
+    )
+
+    ambiente = models.ManyToManyField(
+        Environment, blank=True
+    )
+
+    comments = models.TextField(blank=True)
+
+    class Meta:
+        ordering = ('groupslist', )
+        verbose_name = "Recursos dos grupo"
+
+    def __str__(self):
+        return self.recurso.recurso
+
+    def get_absolute_url(self):
+        return reverse('plugins:netbox_user:resourcegroups', args=[self.pk])
+    
+    def save(self, *args, **kwargs):
+        # Auto-generate the index if it's not provided
+        if self.index is None:
+            last_index = ResourceGroups.objects.filter(groupslist=self.groupslist).aggregate(Max('index'))['index__max']
             self.index = (last_index or 0) + 1  # Start from 1 if no records exist
         super().save(*args, **kwargs)

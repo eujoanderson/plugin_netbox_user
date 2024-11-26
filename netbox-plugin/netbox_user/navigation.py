@@ -73,6 +73,16 @@ sector_buttons = [
 ]
 
 
+groupsresources_buttons = [
+    PluginMenuButton(
+        link='plugins:netbox_user:resourcegroups_add',
+        title='Add',
+        icon_class='mdi mdi-plus-thick',
+        color=ButtonColorChoices.GREEN
+    )
+]
+
+
 
 
 menu = PluginMenu(
@@ -91,7 +101,14 @@ menu = PluginMenu(
                     link_text="Recursos dos Usuários", 
                     buttons=userlistrule_buttons
                 ),
+				
+                PluginMenuItem(
+                    link="plugins:netbox_user:resourcegroups_list", 
+                    link_text="Recursos dos Grupos", 
+                    buttons=groupsresources_buttons
+                ),
             ),
+			
         ),
         ('Opções', 
             (

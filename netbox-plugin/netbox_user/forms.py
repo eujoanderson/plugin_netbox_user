@@ -1,6 +1,6 @@
 
 from .models import UserList, ResourceAccess
-from utilities.forms.fields import CommentField
+from utilities.forms.fields import CommentField, ColorField
 from django import forms
 from netbox.forms import NetBoxModelForm, NetBoxModelFilterSetForm
 from .models import UserList, ResourceAccess, Resources, Environment,Groups,Approver, Sector
@@ -53,6 +53,22 @@ class UserListRuleForm(NetBoxModelForm):
 
 
 
+class ResourceGroupsForm(NetBoxModelForm):
+
+    recurso = forms.ModelChoiceField(queryset=Resources.objects.all(), required=True)
+    groupslist = forms.ModelChoiceField(queryset=Groups.objects.all(), required=True)
+    aprovador = forms.ModelChoiceField(queryset=Approver.objects.all(), required=True)
+
+    ambiente = forms.ModelMultipleChoiceField(queryset=Environment.objects.all(), required=True)
+
+    comments = CommentField()
+
+    class Meta:
+        model = ResourceAccess
+        fields = (
+            'recurso', 'groupslist','tipo_acesso', 'aprovador', 'ambiente','comments','tags'
+        )
+
 ### NOVOS CAMPOS
 
 
@@ -87,10 +103,11 @@ class GroupForm(NetBoxModelForm):
 class ApproverForm(NetBoxModelForm):
 
     comments = CommentField()
+
     class Meta:
         model = Approver
         fields = (
-            'aprovador',  'comments', 'tags'
+            'aprovador','comments', 'tags'
         )
 
 class SectorForm(NetBoxModelForm):

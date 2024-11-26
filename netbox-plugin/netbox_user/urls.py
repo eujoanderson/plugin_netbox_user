@@ -84,5 +84,17 @@ urlpatterns = (
     path('sector/<int:pk>/changelog/', ObjectChangeLogView.as_view(), name='sector_changelog', kwargs={
         'model': models.Sector
     }),
+	
+
+    # resource groups 
+    path('resourcegroups/', views.ResourceGroupsListListView.as_view(), name='resourcegroups_list'),
+    path('resourcegroups/add/', views.ResourceGroupsListEditView.as_view(), name='resourcegroups_add'),
+    path('resourcegroups/<int:pk>/', views.ResourceGroupsView.as_view(), name='resourcegroups'),
+    path('resourcegroups/<int:pk>/edit/', views.ResourceGroupsListEditView.as_view(), name='resourcegroups_edit'),
+    path('resourcegroups/<int:pk>/delete/', views.ResourceGroupsListDeleteView.as_view(), name='resourcegroups_delete'),
+
+    path('resourcegroups/<int:pk>/changelog/', ObjectChangeLogView.as_view(), name='resourcegroups_changelog', kwargs={
+        'model': models.ResourceGroups
+    }),
 )
 

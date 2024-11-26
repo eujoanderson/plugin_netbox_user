@@ -101,6 +101,15 @@ class EnvironmentListDeleteView(generic.ObjectDeleteView):
 
 # Group LIST
 class GroupView(generic.ObjectView):
+    def get_extra_context(self, request, instance):
+
+        table = tables.ResourceGroupsTable(instance.resource_group_rules.all())
+        table.configure(request)
+
+        return {
+            'groups': table,
+        }
+
     queryset = models.Groups.objects.all()
 
 
@@ -156,3 +165,25 @@ class SectorListEditView(generic.ObjectEditView):
 
 class SectorListDeleteView(generic.ObjectDeleteView):
     queryset = models.Sector.objects.all()
+
+
+
+
+# Groups Resources LIST
+class ResourceGroupsView(generic.ObjectView):
+
+    queryset = models.ResourceGroups.objects.all()
+
+
+class ResourceGroupsListListView(generic.ObjectListView):
+    queryset = models.ResourceGroups.objects.all()
+
+    table = tables.ResourceGroupsTable
+
+class ResourceGroupsListEditView(generic.ObjectEditView):
+    queryset = models.ResourceGroups.objects.all()
+    form = forms.ResourceGroupsForm
+
+
+class ResourceGroupsListDeleteView(generic.ObjectDeleteView):
+    queryset = models.ResourceGroups.objects.all()

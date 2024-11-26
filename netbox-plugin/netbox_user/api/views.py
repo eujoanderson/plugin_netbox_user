@@ -2,7 +2,7 @@ from netbox.api.viewsets import NetBoxModelViewSet
 from django.db.models import Count
 
 from .. import filtersets, models
-from .serializers import UserListSerializer, UserListRuleSerializer, ResourcesListSerializer, EnvironmentListSerializer, GroupsListSerializer, ApproverListSerializer, SectorListSerializer
+from .serializers import UserListSerializer, UserListRuleSerializer, ResourcesListSerializer, EnvironmentListSerializer, GroupsListSerializer, ApproverListSerializer, SectorListSerializer, ResourceGroupsListSerializer
 
 class ResourcesListViewSet(NetBoxModelViewSet):
     queryset = models.Resources.objects.prefetch_related('tags')
@@ -29,13 +29,15 @@ class SectorListViewSet(NetBoxModelViewSet):
     serializer_class = SectorListSerializer
 
 
+class ResourceGroupsListViewSet(NetBoxModelViewSet):
+    queryset = models.ResourceGroups.objects.prefetch_related(
+        'groupslist', 'tags'
+    )
+    serializer_class = ResourceGroupsListSerializer
 
 
-## ///////////////
-class UserListViewSet(NetBoxModelViewSet):
-    queryset = models.UserList.objects.prefetch_related('tags')
-    serializer_class = UserListSerializer
-    
+
+
 
 class UserListViewSet(NetBoxModelViewSet):
     queryset = models.UserList.objects.prefetch_related('tags').annotate(

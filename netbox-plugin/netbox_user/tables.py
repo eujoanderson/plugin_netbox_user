@@ -2,14 +2,14 @@ import django_tables2 as tables
 
 from netbox.tables import NetBoxTable, ChoiceFieldColumn
 from .models import UserList, ResourceAccess, Resources, Environment,Groups, Approver, Sector
-from netbox.tables.columns import TagColumn
+from netbox.tables.columns import TagColumn, ColorColumn, ColoredLabelColumn 
 from django.urls import reverse
 
 class UserListTable(NetBoxTable):
     name = tables.Column(
         linkify=True
     )
-
+    
     groups = tables.ManyToManyColumn()
 
     setor = tables.ManyToManyColumn()
@@ -72,6 +72,30 @@ class UserListRuleTable(NetBoxTable):
 
 
 
+class ResourceGroupsTable(NetBoxTable):
+    groupslist = tables.Column(verbose_name="Grupo")
+
+    tags = TagColumn()
+    
+    tipo_acesso = tables.Column(verbose_name="Tipo Acesso")
+    aprovador = tables.Column(verbose_name="Aprovador")
+    ambiente = tables.ManyToManyColumn(verbose_name="Ambiente")
+    
+    recurso = tables.Column(
+        linkify=lambda record: reverse('plugins:netbox_user:resourcegroups', kwargs={'pk': record.pk})
+    )
+
+    tipo_acesso = ChoiceFieldColumn()
+    
+    class Meta(NetBoxTable.Meta):
+        model = ResourceAccess
+        fields = (
+            'pk', 'id', 'recurso','groupslist', 'tipo_acesso', 'aprovador','ambiente','tags'
+        )
+        default_columns = (
+            'recurso', 'groupslist','tipo_acesso', 'aprovador','ambiente','tags'
+        )
+
 
 class ResourcesTable(NetBoxTable):
     recurso = tables.Column(
@@ -105,12 +129,17 @@ class GroupTable(NetBoxTable):
         linkify=True
     )
 
+    rules_count = tables.Column(
+        verbose_name="Recursos",
+        accessor="resource_group_rules.count", 
+    )
+
     tags = TagColumn()
 
     class Meta(NetBoxTable.Meta):
         model = Groups
-        fields = ('pk', 'id', 'grupo',  'comments', 'tags')
-        default_columns = ('grupo',  'comments', 'tags' )
+        fields = ('pk', 'id', 'grupo',  'comments','rules_count', 'tags')
+        default_columns = ('grupo',  'comments', 'rules_count','tags' )
 
 
 
@@ -119,12 +148,14 @@ class ApproverTable(NetBoxTable):
         linkify=True
     )
 
+    color = ColorColumn()
+
     tags = TagColumn()
 
     class Meta(NetBoxTable.Meta):
         model = Approver
-        fields = ('pk', 'id', 'aprovador',  'comments', 'tags')
-        default_columns = ('aprovador',  'comments', 'tags' )
+        fields = ('pk', 'id', 'aprovador',  'color','comments', 'tags')
+        default_columns = ('aprovador',  'color','comments', 'tags' )
 
 
 class SectorTable(NetBoxTable):

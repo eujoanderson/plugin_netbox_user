@@ -3,6 +3,10 @@ from . import forms, models, tables
 from django.db.models import Count
 from . import filtersets, forms, models, tables
 
+
+
+
+
 # USER LIST
 class UserListView(generic.ObjectView):
     queryset = models.UserList.objects.all()
@@ -187,3 +191,7 @@ class ResourceGroupsListEditView(generic.ObjectEditView):
 
 class ResourceGroupsListDeleteView(generic.ObjectDeleteView):
     queryset = models.ResourceGroups.objects.all()
+
+
+
+

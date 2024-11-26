@@ -131,15 +131,15 @@ class GroupTable(NetBoxTable):
 
     rules_count = tables.Column(
         verbose_name="Recursos",
-        accessor="rules.count", 
+        accessor="resource_group_rules.count", 
     )
 
     tags = TagColumn()
 
     class Meta(NetBoxTable.Meta):
         model = Groups
-        fields = ('pk', 'id', 'grupo',  'comments', 'tags')
-        default_columns = ('grupo',  'comments', 'tags' )
+        fields = ('pk', 'id', 'grupo', 'rules_count', 'comments', 'tags')
+        default_columns = ('grupo',  'rules_count','comments', 'tags' )
 
 
 

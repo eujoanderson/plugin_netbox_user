@@ -5,6 +5,7 @@ from utilities.choices import ChoiceSet
 from django.urls import reverse # type: ignore
 from django.db.models import Max
 from extras.models import Tag
+from django.core.exceptions import ValidationError
 
 
 class Resources(NetBoxModel):
@@ -232,6 +233,15 @@ class ResourceAccess(NetBoxModel):
             self.index = (last_index or 0) + 1  # Start from 1 if no records exist
         super().save(*args, **kwargs)
 
+    def clean(self):
+        # Verifica se a data de concessão é maior que a data de expiração
+        if self.data_concessao and self.data_expiracao:
+            if self.data_concessao > self.data_expiracao:
+                raise ValidationError({
+                    'data_concessao': 'A data de concessão não pode ser maior que a data de expiração.'
+                })
+        super().clean()
+
     ## Falta realizar o processo ainda
     def clone(self):
         attrs = super().clone()
@@ -247,8 +257,7 @@ class ResourceGroups(NetBoxModel):
     groupslist = models.ForeignKey(
         to=Groups,
         on_delete=models.CASCADE,
-        related_name='resource_group_rules',
-        #unique=True
+        related_name='resource_group_rules'
     )
 
     recurso = models.ForeignKey(
@@ -277,9 +286,16 @@ class ResourceGroups(NetBoxModel):
     class Meta:
         ordering = ('groupslist','index' )
         verbose_name = "Recursos dos grupo"
+        unique_together = ('groupslist', 'recurso')
 
     def __str__(self):
         return self.recurso.recurso
+    
+    def clean(self):
+        # Valida se o recurso já existe no mesmo grupo
+        if ResourceGroups.objects.filter(groupslist=self.groupslist, recurso=self.recurso).exists():
+            raise ValidationError(f'O recurso "{self.recurso}" já está atribuído a este grupo.')
+        super().clean()
 
     def get_absolute_url(self):
         return reverse('plugins:netbox_user:resourcegroups', args=[self.pk])
@@ -290,3 +306,5 @@ class ResourceGroups(NetBoxModel):
             last_index = ResourceGroups.objects.filter(groupslist=self.groupslist).aggregate(Max('index'))['index__max']
             self.index = (last_index or 0) + 1  # Start from 1 if no records exist
         super().save(*args, **kwargs)
+
+

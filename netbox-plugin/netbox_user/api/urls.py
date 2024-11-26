@@ -13,6 +13,7 @@ router.register('approverlist', views.ApproverListViewSet, basename='approverlis
 router.register('sectorlist', views.SectorListViewSet, basename='sectorlist')
 router.register('resourcegroups', views.ResourceGroupsListViewSet, basename='resourcegroups')
 
+
 # Define urlpatterns explicitamente
 urlpatterns = router.urls
 

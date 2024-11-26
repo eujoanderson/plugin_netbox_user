@@ -2,9 +2,13 @@
 from .models import UserList, ResourceAccess
 from utilities.forms.fields import CommentField, ColorField
 from django import forms
+
+from utilities.forms.fields import DynamicModelMultipleChoiceField
+
 from netbox.forms import NetBoxModelForm, NetBoxModelFilterSetForm
 from .models import UserList, ResourceAccess, Resources, Environment,Groups,Approver, Sector, ResourceGroups
 from django.core.exceptions import ValidationError
+from utilities.forms.widgets import APISelectMultiple, DatePicker
 
 
 class UserListForm(NetBoxModelForm):
@@ -12,7 +16,17 @@ class UserListForm(NetBoxModelForm):
 
     groups = forms.ModelMultipleChoiceField(
         queryset=Groups.objects.all(),
-        required=False
+        required=False,
+        help_text="Adicione o usuário ao grupo",
+        #widget=APISelectMultiple(  # Adiciona o widget com botão de atualização
+        #api_url='/api/plugins/plugin-user/grouplist/'  # Endpoint da API para grupos
+        #)
+    )
+
+    setor = forms.ModelChoiceField(
+        queryset=Sector.objects.all(),
+        required=False,
+        help_text="Adicione o usuário ao setor",
     )
 
     class Meta:
@@ -33,13 +47,15 @@ class UserListRuleForm(NetBoxModelForm):
     comments = CommentField()
 
     data_concessao = forms.DateField(
-        widget=forms.DateInput(attrs={'type': 'date'}),
+        widget=DatePicker(attrs={'autocomplete': 'off'}),
+        input_formats=['%d-%m-%Y'],
         required=True,
         label="Data de Concessão"
     )
 
     data_expiracao = forms.DateField(
-        widget=forms.DateInput(attrs={'type': 'date'}),
+        widget=DatePicker(attrs={'autocomplete': 'off'}),
+        input_formats=['%d-%m-%Y'],
         required=True,
         label="Data de Expiração"
     )
@@ -134,3 +150,6 @@ class UserListRuleFilterForm(NetBoxModelFilterSetForm):
     index = forms.IntegerField(
         required=False
     )
+
+
+

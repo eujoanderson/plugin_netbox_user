@@ -96,5 +96,6 @@ urlpatterns = (
     path('resourcegroups/<int:pk>/changelog/', ObjectChangeLogView.as_view(), name='resourcegroups_changelog', kwargs={
         'model': models.ResourceGroups
     }),
+	
 )
 

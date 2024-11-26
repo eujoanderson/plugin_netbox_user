@@ -17,10 +17,6 @@ class ResourceAccessSerializer(serializers.ModelSerializer):
         )
 
 
-
-
-
-
 ### RESOURCES
 class ResourcesSerializer(NetBoxModelSerializer):
 
@@ -268,3 +264,4 @@ class UserListRuleSerializer(NetBoxModelSerializer):
         model = ResourceAccess
         fields = ('id', 'user','index', 'recurso', 'tipo_acesso', 'data_concessao',
                   'data_expiracao', 'aprovador', 'justificativa', 'status', 'ambiente', 'url')
+        

@@ -3,7 +3,7 @@ from .models import UserList, ResourceAccess
 from utilities.forms.fields import CommentField, ColorField
 from django import forms
 from netbox.forms import NetBoxModelForm, NetBoxModelFilterSetForm
-from .models import UserList, ResourceAccess, Resources, Environment,Groups,Approver, Sector
+from .models import UserList, ResourceAccess, Resources, Environment,Groups,Approver, Sector, ResourceGroups
 from django.core.exceptions import ValidationError
 
 
@@ -64,7 +64,7 @@ class ResourceGroupsForm(NetBoxModelForm):
     comments = CommentField()
 
     class Meta:
-        model = ResourceAccess
+        model = ResourceGroups
         fields = (
             'recurso', 'groupslist','tipo_acesso', 'aprovador', 'ambiente','comments','tags'
         )

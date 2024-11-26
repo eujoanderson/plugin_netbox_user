@@ -275,7 +275,7 @@ class ResourceGroups(NetBoxModel):
     comments = models.TextField(blank=True)
 
     class Meta:
-        ordering = ('groupslist', )
+        ordering = ('groupslist','index' )
         verbose_name = "Recursos dos grupo"
 
     def __str__(self):

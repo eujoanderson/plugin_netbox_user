@@ -1,7 +1,7 @@
 import django_tables2 as tables
 
 from netbox.tables import NetBoxTable, ChoiceFieldColumn
-from .models import UserList, ResourceAccess, Resources, Environment,Groups, Approver, Sector
+from .models import UserList, ResourceAccess, Resources, Environment,Groups, Approver, Sector, ResourceGroups
 from netbox.tables.columns import TagColumn, ColorColumn, ColoredLabelColumn 
 from django.urls import reverse
 
@@ -88,7 +88,7 @@ class ResourceGroupsTable(NetBoxTable):
     tipo_acesso = ChoiceFieldColumn()
     
     class Meta(NetBoxTable.Meta):
-        model = ResourceAccess
+        model = ResourceGroups
         fields = (
             'pk', 'id', 'recurso','groupslist', 'tipo_acesso', 'aprovador','ambiente','tags'
         )
@@ -131,15 +131,15 @@ class GroupTable(NetBoxTable):
 
     rules_count = tables.Column(
         verbose_name="Recursos",
-        accessor="resource_group_rules.count", 
+        accessor="rules.count", 
     )
 
     tags = TagColumn()
 
     class Meta(NetBoxTable.Meta):
         model = Groups
-        fields = ('pk', 'id', 'grupo',  'comments','rules_count', 'tags')
-        default_columns = ('grupo',  'comments', 'rules_count','tags' )
+        fields = ('pk', 'id', 'grupo',  'comments', 'tags')
+        default_columns = ('grupo',  'comments', 'tags' )
 
 
 

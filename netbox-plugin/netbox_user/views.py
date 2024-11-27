@@ -3,10 +3,6 @@ from . import forms, models, tables
 from django.db.models import Count
 from . import filtersets, forms, models, tables
 
-
-
-
-
 # USER LIST
 class UserListView(generic.ObjectView):
     queryset = models.UserList.objects.all()
@@ -21,12 +17,15 @@ class UserListView(generic.ObjectView):
         }
 
 
+
 class UserListListView(generic.ObjectListView):
     queryset = models.UserList.objects.annotate(
         rule_count=Count('rules')
     )
 
     table = tables.UserListTable
+    filterset = filtersets.UserListFilterSet
+
 
 class UserListEditView(generic.ObjectEditView):
     queryset = models.UserList.objects.all()
@@ -47,7 +46,7 @@ class UserListRuleListView(generic.ObjectListView):
     table = tables.UserListRuleTable
 
     filterset = filtersets.UserListRuleFilterSet
-    filterset_form = forms.UserListRuleFilterForm
+    #filterset_form = forms.UserListRuleFilterForm
 
 
 class UserListRuleEditView(generic.ObjectEditView):
@@ -70,6 +69,8 @@ class ResourcesListListView(generic.ObjectListView):
     queryset = models.Resources.objects.all()
 
     table = tables.ResourcesTable
+    filterset = filtersets.ResourcesFilterSet
+    
 
 class ResourcesListEditView(generic.ObjectEditView):
     queryset = models.Resources.objects.all()
@@ -92,6 +93,7 @@ class EnvironmentListListView(generic.ObjectListView):
     queryset = models.Environment.objects.all()
 
     table = tables.EnvironmentTable
+    filterset = filtersets.EnvironmentFilterSet
 
 class EnvironmentListEditView(generic.ObjectEditView):
     queryset = models.Environment.objects.all()
@@ -121,6 +123,7 @@ class GroupListListView(generic.ObjectListView):
     queryset = models.Groups.objects.all()
 
     table = tables.GroupTable
+    filterset = filtersets.GroupsFilterSet
 
 class GroupListEditView(generic.ObjectEditView):
     queryset = models.Groups.objects.all()
@@ -141,6 +144,7 @@ class ApproverListListView(generic.ObjectListView):
     queryset = models.Approver.objects.all()
 
     table = tables.ApproverTable
+    filterset = filtersets.ApproverFilterSet
 
 class ApproverListEditView(generic.ObjectEditView):
     queryset = models.Approver.objects.all()
@@ -161,6 +165,7 @@ class SectorListListView(generic.ObjectListView):
     queryset = models.Sector.objects.all()
 
     table = tables.SectorTable
+    filterset = filtersets.SectorFilterSet
 
 class SectorListEditView(generic.ObjectEditView):
     queryset = models.Sector.objects.all()

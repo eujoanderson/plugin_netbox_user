@@ -146,7 +146,7 @@ class UserList(NetBoxModel):
 
     class Meta:
         ordering = ('name',)
-        verbose_name = "User"
+        verbose_name = "Usuário"
 
     def __str__(self):
         return self.name

@@ -15,7 +15,7 @@ class UserListRuleFilterSet(NetBoxModelFilterSet):
         if not value.strip():
             return queryset
         return queryset.filter(
-            Q(user__icontains=value) |  Q(recurso__icontains=value) |  Q(tipo_acesso__icontains=value) |  Q(data_concessao__icontains=value) |  Q(data_expiracao__icontains=value) |  Q(status__icontains=value) |  Q(ambiente__icontains=value)
+           Q(status__icontains=value) | Q(recurso__recurso__icontains=value)  | Q(ambiente__ambiente__icontains=value)
         )
 
 
@@ -23,28 +23,17 @@ class UserListFilterSet(NetBoxModelFilterSet):
 
     class Meta:
         model = UserList
-        fields = ('name','groups', 'comments', 'status_user','setor','tags',)
+        fields = ('name','groups','status_user','setor',)
 
     def search(self, queryset, name, value):
         if not value.strip():
             return queryset
         return queryset.filter(
-            Q(name__icontains=value) | Q(groups__icontains=value) | Q(status_user__icontains=value) | Q(setor__icontains=value)
+            Q(name__icontains=value) | Q(setor__setor__icontains=value)
         )
 
 
-class ResourcesFilterSet(NetBoxModelFilterSet):
 
-    class Meta:
-        model = Resources
-        fields = ('id', 'recurso',  'comments', )
-
-    def search(self, queryset, name, value):
-        if not value.strip():
-            return queryset
-        return queryset.filter(
-            Q(recurso__icontains=value) | Q(comments__icontains=value)
-        )
     
 class EnvironmentFilterSet(NetBoxModelFilterSet):
 
@@ -104,4 +93,34 @@ class SectorFilterSet(NetBoxModelFilterSet):
         return queryset.filter(
             Q(setor__icontains=value)| Q(comments__icontains=value)
         )
+    
 
+
+
+class ResourcesFilterSet(NetBoxModelFilterSet):
+
+    class Meta:
+        model = Resources
+        fields = ('id', 'recurso',  'comments', )
+
+    def search(self, queryset, name, value):
+        if not value.strip():
+            return queryset
+        return queryset.filter(
+            Q(recurso__recurso__icontains=value)
+        )
+
+
+class ResourceGroupsFilterSet(NetBoxModelFilterSet):
+
+    class Meta:
+        model = ResourceGroups
+        fields = ('recurso','groupslist', 'tipo_acesso', 'aprovador','ambiente','comments',)
+
+
+    def search(self, queryset, name, value):
+        if not value.strip():
+            return queryset
+        return queryset.filter(
+            Q(recurso__recurso__icontains=value) | Q(groupslist__grupo__icontains=value) | Q(ambiente__ambiente__icontains=value)
+        )

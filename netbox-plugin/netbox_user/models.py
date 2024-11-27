@@ -210,7 +210,7 @@ class ResourceAccess(NetBoxModel):
 
     class Meta:
         ordering = ('user', 'index')
-        verbose_name = "Resource User"
+        verbose_name = "Recursos dos Usuário"
 
         unique_together = ('user', 'recurso')
 

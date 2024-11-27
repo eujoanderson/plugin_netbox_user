@@ -46,7 +46,6 @@ class UserListRuleListView(generic.ObjectListView):
     table = tables.UserListRuleTable
 
     filterset = filtersets.UserListRuleFilterSet
-    #filterset_form = forms.UserListRuleFilterForm
 
 
 class UserListRuleEditView(generic.ObjectEditView):
@@ -188,6 +187,7 @@ class ResourceGroupsListListView(generic.ObjectListView):
     queryset = models.ResourceGroups.objects.all()
 
     table = tables.ResourceGroupsTable
+    filterset = filtersets.ResourceGroupsFilterSet
 
 class ResourceGroupsListEditView(generic.ObjectEditView):
     queryset = models.ResourceGroups.objects.all()

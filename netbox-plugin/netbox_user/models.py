@@ -22,9 +22,6 @@ class Resources(NetBoxModel):
     
     def get_absolute_url(self):
         return reverse('plugins:netbox_user:resourceslist', args=[self.pk])
-    
-  
-
 
 
 class Environment(NetBoxModel):
@@ -132,7 +129,7 @@ class UserList(NetBoxModel):
     name = models.CharField(max_length=100,unique=True)
     comments = models.TextField(blank=True)
 
-    groups = models.ManyToManyField(Groups,blank=True)
+    groups = models.ManyToManyField(Groups,blank=True, related_name='groups')
 
     tags = models.ManyToManyField(Tag, blank=True)
 
@@ -151,11 +148,19 @@ class UserList(NetBoxModel):
     def __str__(self):
         return self.name
     
+    def get_related_groups(self):
+        return self.groups.all()
+
     def get_absolute_url(self):
         return reverse('plugins:netbox_user:userlist', args=[self.pk])
 
     def get_status_user_color(self):
         return ActionChoicesStatusUserColor.colors.get(self.status_user)
+    
+    def save(self, *args, **kwargs):
+        # Salva o usuário normalmente
+        super().save(*args, **kwargs)
+
 
 ## Falta realizar o processo ainda
     def clone(self):
@@ -263,7 +268,7 @@ class ResourceGroups(NetBoxModel):
     recurso = models.ForeignKey(
         to=Resources,
         on_delete=models.CASCADE,
-        related_name='resource_rules'
+        related_name='resource_group_rules'
     )
 
     tipo_acesso = models.CharField(
@@ -306,5 +311,4 @@ class ResourceGroups(NetBoxModel):
             last_index = ResourceGroups.objects.filter(groupslist=self.groupslist).aggregate(Max('index'))['index__max']
             self.index = (last_index or 0) + 1  # Start from 1 if no records exist
         super().save(*args, **kwargs)
-
 

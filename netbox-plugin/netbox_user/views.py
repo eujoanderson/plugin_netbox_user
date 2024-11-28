@@ -2,19 +2,41 @@ from netbox.views import generic
 from . import forms, models, tables
 from django.db.models import Count
 from . import filtersets, forms, models, tables
+from django_tables2 import RequestConfig
 
 # USER LIST
 class UserListView(generic.ObjectView):
     queryset = models.UserList.objects.all()
 
     def get_extra_context(self, request, instance):
-
         table = tables.UserListRuleTable(instance.rules.all())
         table.configure(request)
 
+        table2 = tables.GroupTable(instance.groups.all())
+        table2.configure(request)
+
+        resource_groups_list = []
+        for grupo in instance.groups.all():
+            # Recupera todos os 'ResourceGroups' para o grupo específico
+            resource_groups = grupo.resource_group_rules.all()  # Usando o related_name 'resource_group_rules'
+
+            # Para cada recurso no grupo, crie uma linha na tabela
+            for rg in resource_groups:
+                # Instâncias do modelo
+                resource_groups_list.append(rg)
+
+        # Passando instâncias de modelo para a tabela
+        resource_groups_table = tables.ResourceGroupsTable(resource_groups_list)
+
+        # Configurando a tabela
+        resource_groups_table.configure(request)
+
         return {
             'recurso': table,
+            'recurso_grupo': resource_groups_table,
         }
+
+    
 
 
 

@@ -9,6 +9,7 @@ router.register('pluginuserrule', views.UserListRuleViewSet, basename='pluginuse
 router.register('resourceslist', views.ResourcesListViewSet, basename='resourceslist')
 router.register('environmentlist', views.EnvironmentListViewSet, basename='environmentlist')
 router.register('grouplist', views.GroupsListViewSet, basename='grouplist')
+router.register('groups', views.GroupsListViewSet, basename='groups-list')
 router.register('approverlist', views.ApproverListViewSet, basename='approverlist')
 router.register('sectorlist', views.SectorListViewSet, basename='sectorlist')
 router.register('resourcegroups', views.ResourceGroupsListViewSet, basename='resourcegroups')

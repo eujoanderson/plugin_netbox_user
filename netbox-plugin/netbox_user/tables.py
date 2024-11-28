@@ -73,7 +73,10 @@ class UserListRuleTable(NetBoxTable):
 
 
 class ResourceGroupsTable(NetBoxTable):
-    groupslist = tables.Column(verbose_name="Grupo")
+    groupslist = tables.Column(
+        verbose_name="Grupo",
+        linkify=lambda record: reverse('plugins:netbox_user:groupslist', kwargs={'pk': record.pk})
+    )
 
     tags = TagColumn()
     
@@ -154,8 +157,8 @@ class ApproverTable(NetBoxTable):
 
     class Meta(NetBoxTable.Meta):
         model = Approver
-        fields = ('pk', 'id', 'aprovador',  'color','comments', 'tags')
-        default_columns = ('aprovador',  'color','comments', 'tags' )
+        fields = ('pk', 'id', 'aprovador', 'comments', 'tags')
+        default_columns = ('aprovador',  'comments', 'tags' )
 
 
 class SectorTable(NetBoxTable):

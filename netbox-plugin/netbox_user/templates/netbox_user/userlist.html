@@ -22,6 +22,19 @@
               <td>{{ object.status_user|capfirst }}</td>
             </tr>
 
+            <tr>
+              <th scope="row" >Grupo</th>
+              <td>
+                {% if object.groups.exists %}
+                {% for grupo in object.groups.all %}
+                  <a href="{{ grupo.get_absolute_url }}">{{ grupo }}</a>{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+                {% endif %}
+              </td>
+            </tr>
+
+
+
             <th scope="row">Setor</th>
             <td>
               {% if object.setor.exists %}
@@ -51,5 +64,19 @@
     </div>
   </div>
 </div>
+
+
+<div class="row">
+  <div class="col pt-4 col-md-12">
+    <div class="card">
+      <h5 class="card-header">Recursos do grupo</h5>
+      <div class="card-body table-responsive">
+        {% render_table recurso_grupo %}
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
 {% endblock content %}

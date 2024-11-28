@@ -9,10 +9,33 @@ from netbox.forms import NetBoxModelForm, NetBoxModelFilterSetForm
 from .models import UserList, ResourceAccess, Resources, Environment,Groups,Approver, Sector, ResourceGroups
 from django.core.exceptions import ValidationError
 from utilities.forms.widgets import APISelectMultiple, DatePicker
+from django.urls import reverse_lazy
 
 
 class UserListForm(NetBoxModelForm):
     comments = CommentField()
+
+    groups = forms.ModelMultipleChoiceField(
+        queryset=Groups.objects.all(),
+        required=True,
+        widget=forms.SelectMultiple,
+        help_text="Adicione o usuário ao grupo",
+    )
+
+
+    setor = forms.ModelMultipleChoiceField(
+        queryset=Sector.objects.all(),
+        required=False,
+        help_text="Adicione o usuário ao setor",
+    )
+
+    class Meta:
+        model = UserList
+        fields = ('name','groups', 'comments', 'status_user','setor','tags',)
+
+
+class UserListFilterForm(NetBoxModelFilterSetForm):
+    model = UserList
 
     groups = forms.ModelMultipleChoiceField(
         queryset=Groups.objects.all(),
@@ -23,16 +46,19 @@ class UserListForm(NetBoxModelForm):
         #)
     )
 
-    setor = forms.ModelChoiceField(
+
+    setor = forms.ModelMultipleChoiceField(
         queryset=Sector.objects.all(),
         required=False,
         help_text="Adicione o usuário ao setor",
     )
 
     class Meta:
-        model = UserList
-        fields = ('name','groups', 'comments', 'status_user','setor','tags',)
+        model = UserList 
+        fields = ['name','groups', 'status_user','setor','tags',]  
 
+
+############################################################################################################################
 
 class UserListRuleForm(NetBoxModelForm):
 
@@ -48,14 +74,12 @@ class UserListRuleForm(NetBoxModelForm):
 
     data_concessao = forms.DateField(
         widget=DatePicker(attrs={'autocomplete': 'off'}),
-        input_formats=['%d-%m-%Y'],
         required=True,
         label="Data de Concessão"
     )
 
     data_expiracao = forms.DateField(
         widget=DatePicker(attrs={'autocomplete': 'off'}),
-        input_formats=['%d-%m-%Y'],
         required=True,
         label="Data de Expiração"
     )

@@ -61,6 +61,10 @@ urlpatterns = (
         'model': models.Groups
     }),
 	
+    path('groups/', views.GroupView.as_view(), name='groups-list'),
+    
+	
+	
 
     # Approver 
     path('approver/', views.ApproverListListView.as_view(), name='approver_list'),
@@ -95,7 +99,6 @@ urlpatterns = (
 
     path('resourcegroups/<int:pk>/changelog/', ObjectChangeLogView.as_view(), name='resourcegroups_changelog', kwargs={
         'model': models.ResourceGroups
-    }),
-	
+    }),	
 )
 

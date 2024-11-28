@@ -15,7 +15,7 @@ class UserListRuleFilterSet(NetBoxModelFilterSet):
         if not value.strip():
             return queryset
         return queryset.filter(
-           Q(status__icontains=value) | Q(recurso__recurso__icontains=value)  | Q(ambiente__ambiente__icontains=value)
+           Q(status__icontains=value) | Q(recurso__recurso__icontains=value)  | Q(ambiente__ambiente__icontains=value) 
         )
 
 
@@ -29,7 +29,7 @@ class UserListFilterSet(NetBoxModelFilterSet):
         if not value.strip():
             return queryset
         return queryset.filter(
-            Q(name__icontains=value) | Q(setor__setor__icontains=value)
+            Q(name__icontains=value) | Q(setor__setor__icontains=value) | Q(status_user__icontains=value)
         )
 
 

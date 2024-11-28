@@ -1,0 +1,19 @@
+{% extends 'generic/object_list.html' %}
+{% load buttons %}
+{% load i18n %}
+
+{% load helpers %}
+{% load i18n %}]
+
+
+{% block bulk_buttons %}
+    <button type="submit" name="_edit"
+    formaction="{% url %"}
+    class="btn btn-warning btn-sm">
+    <i class="mdi mdi-pencil" aria-hidden="true"></i> {% trans "Edit Selected" %}
+    </button>
+
+    <button type="submit" name="_delete" formaction="{% url %"} class="btn btn-danger btn-sm">
+        <i class="mdi mdi-trash-can-outline" aria-hidden="true"></i> {% trans "Delete Selected" %}
+    </button>
+{% endblock %}

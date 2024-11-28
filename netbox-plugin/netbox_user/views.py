@@ -21,6 +21,7 @@ class UserListView(generic.ObjectView):
             resource_groups = grupo.resource_group_rules.all()  # Usando o related_name 'resource_group_rules'
 
             # Para cada recurso no grupo, crie uma linha na tabela
+
             for rg in resource_groups:
                 # Instâncias do modelo
                 resource_groups_list.append(rg)
@@ -47,6 +48,8 @@ class UserListListView(generic.ObjectListView):
 
     table = tables.UserListTable
     filterset = filtersets.UserListFilterSet
+    template_name = 'netbox_user/buttons.html'
+
 
 
 class UserListEditView(generic.ObjectEditView):
@@ -129,12 +132,22 @@ class EnvironmentListDeleteView(generic.ObjectDeleteView):
 # Group LIST
 class GroupView(generic.ObjectView):
     def get_extra_context(self, request, instance):
-
         table = tables.ResourceGroupsTable(instance.resource_group_rules.all())
         table.configure(request)
 
+        users = instance.users.all()  
+
+        
+        users_table = tables.UserListTable(users)
+        users_table.configure(request)
+
+        related_models = (
+            (instance.users.all(), 'users'),  
+        )
+
         return {
             'groups': table,
+            'related_models': related_models,
         }
 
     queryset = models.Groups.objects.all()

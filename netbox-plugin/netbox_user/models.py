@@ -60,7 +60,7 @@ class Sector(NetBoxModel):
 
     class Meta:
         ordering = ('setor',)
-        verbose_name = "Setor"
+        verbose_name = "Setore"
 
     def __str__(self):
         return str(self.setor)
@@ -129,7 +129,7 @@ class UserList(NetBoxModel):
     name = models.CharField(max_length=100,unique=True)
     comments = models.TextField(blank=True)
 
-    groups = models.ManyToManyField(Groups,blank=True, related_name='groups')
+    groups = models.ManyToManyField(Groups,blank=True, related_name='users')
 
     tags = models.ManyToManyField(Tag, blank=True)
 
@@ -160,6 +160,7 @@ class UserList(NetBoxModel):
     def save(self, *args, **kwargs):
         # Salva o usuário normalmente
         super().save(*args, **kwargs)
+
 
 
 ## Falta realizar o processo ainda

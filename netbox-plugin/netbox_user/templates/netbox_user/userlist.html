@@ -1,6 +1,7 @@
 {% extends 'generic/object.html' %}
 {% load render_table from django_tables2 %}
 
+
 {% block content %}
   <div class="row mb-3">
     <div class="col col-md-6">
@@ -14,7 +15,7 @@
             </tr>
 
             <tr>
-              <th scope="row">Recursos</th>
+              <th scope="row">Recursos do usuário</th>
               <td>{{ object.rules.count }}</td>
             </tr>
             <tr>
@@ -27,7 +28,7 @@
               <td>
                 {% if object.groups.exists %}
                 {% for grupo in object.groups.all %}
-                  <a href="{{ grupo.get_absolute_url }}">{{ grupo }}</a>{% if not forloop.last %}, {% endif %}
+                  <a href="{{ grupo.get_absolute_url }}">{{ grupo }}</a>{% if not forloop.last %} | {% endif %}
                 {% endfor %}
                 {% endif %}
               </td>

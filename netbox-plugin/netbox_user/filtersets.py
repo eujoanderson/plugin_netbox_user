@@ -4,6 +4,26 @@ from .models import ResourceAccess, UserList, Resources, Groups, Approver, Secto
 from django.db.models import Q
 
 
+class UserListFilterSet(NetBoxModelFilterSet):
+
+    name = django_filters.ModelMultipleChoiceFilter(queryset=UserList.objects.all(), required=False)
+
+    tags = django_filters.ModelMultipleChoiceFilter(
+        queryset=Tag.objects.all(),
+        required=False,
+        label="Selecione as tags"
+    )
+
+    class Meta:
+        model = UserList
+        fields = ('name','groups','setor','tags')
+
+    def search(self, queryset, name, value):
+        if not value.strip():
+            return queryset
+        return queryset.filter(
+            Q(name__icontains=value) | Q(setor__setor__icontains=value) | Q(status_user__icontains=value) | Q(tags__name__icontains=value)
+        )
 
 class UserListRuleFilterSet(NetBoxModelFilterSet):
 
@@ -28,51 +48,34 @@ class UserListRuleFilterSet(NetBoxModelFilterSet):
         if not value.strip():
             return queryset
         return queryset.filter(
-           Q(status__icontains=value) | Q(recurso__recurso__icontains=value)  | Q(ambiente__ambiente__icontains=value) 
+           Q(status__icontains=value) | Q(recurso__recurso__icontains=value)  | Q(ambiente__ambiente__icontains=value)  | Q(tags__name__icontains=value)
         )
 
 
-class UserListFilterSet(NetBoxModelFilterSet):
 
-    name = django_filters.ModelMultipleChoiceFilter(queryset=UserList.objects.all(), required=False)
+class EnvironmentFilterSet(NetBoxModelFilterSet):
 
+    ambiente = django_filters.ModelMultipleChoiceFilter(queryset=Environment.objects.all(), required=False)
     tags = django_filters.ModelMultipleChoiceFilter(
         queryset=Tag.objects.all(),
         required=False,
         label="Selecione as tags"
     )
-
-    class Meta:
-        model = UserList
-        fields = ('name','groups','setor','tags')
-
-    def search(self, queryset, name, value):
-        if not value.strip():
-            return queryset
-        return queryset.filter(
-            Q(name__icontains=value) | Q(setor__setor__icontains=value) | Q(status_user__icontains=value)
-        )
-
-
-
-    
-class EnvironmentFilterSet(NetBoxModelFilterSet):
-
     class Meta:
         model = Environment
-        fields = ('ambiente', 'comments',)
+        fields = ('ambiente', 'tags',)
 
 
     def search(self, queryset, name, value):
         if not value.strip():
             return queryset
         return queryset.filter(
-            Q(ambiente__icontains=value) | Q(comments__icontains=value)
+            Q(ambiente__icontains=value) | Q(tags__name__icontains=value)
         )
 
-
 class GroupsFilterSet(NetBoxModelFilterSet):
-
+    grupo = django_filters.ModelMultipleChoiceFilter(queryset=Groups.objects.all(), required=False)
+    tags = django_filters.ModelMultipleChoiceFilter(queryset=Tag.objects.all(), required=False)
     class Meta:
         model = Groups
         fields = ('id', 'grupo', 'comments',)
@@ -82,11 +85,13 @@ class GroupsFilterSet(NetBoxModelFilterSet):
         if not value.strip():
             return queryset
         return queryset.filter(
-            Q(grupo__icontains=value)
+            Q(grupo__icontains=value) | Q(tags__name__icontains=value)
         )
-    
 
 class ApproverFilterSet(NetBoxModelFilterSet):
+
+    aprovador = django_filters.ModelMultipleChoiceFilter(queryset=Approver.objects.all(), required=False)
+    tags = django_filters.ModelMultipleChoiceFilter(queryset=Tag.objects.all(), required=False)
 
     class Meta:
         model = Approver
@@ -97,29 +102,33 @@ class ApproverFilterSet(NetBoxModelFilterSet):
         if not value.strip():
             return queryset
         return queryset.filter(
-            Q(aprovador__icontains=value) | Q(comments__icontains=value)
+            Q(aprovador__icontains=value) | Q(tags__name__icontains=value)
         )
-
 
 class SectorFilterSet(NetBoxModelFilterSet):
 
+    setor = django_filters.ModelMultipleChoiceFilter(queryset=Sector.objects.all(), required=False)
+    tags = django_filters.ModelMultipleChoiceFilter(queryset=Tag.objects.all(), required=False)
+
     class Meta:
         model = Sector
-        fields = ('setor',  'comments',)
+        fields = ('setor',)
 
 
     def search(self, queryset, name, value):
         if not value.strip():
             return queryset
         return queryset.filter(
-            Q(setor__icontains=value)| Q(comments__icontains=value)
+            Q(setor__icontains=value) | Q(tags__name__icontains=value)
         )
-    
-
-
 
 class ResourcesFilterSet(NetBoxModelFilterSet):
-
+    recurso = django_filters.ModelMultipleChoiceFilter(queryset=Resources.objects.all(), required=False)
+    tags = django_filters.ModelMultipleChoiceFilter(
+        queryset=Tag.objects.all(),
+        required=False,
+        label="Selecione as tags"
+    )
     class Meta:
         model = Resources
         fields = ('id', 'recurso',  'comments', )
@@ -128,9 +137,8 @@ class ResourcesFilterSet(NetBoxModelFilterSet):
         if not value.strip():
             return queryset
         return queryset.filter(
-            Q(recurso__recurso__icontains=value)
+            Q(recurso__icontains=value)
         )
-
 
 class ResourceGroupsFilterSet(NetBoxModelFilterSet):
     recurso = django_filters.ModelMultipleChoiceFilter(queryset=Resources.objects.all(), required=False)

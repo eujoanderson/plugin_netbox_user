@@ -28,8 +28,7 @@ class UserListView(generic.ObjectView):
         return {
             'recurso': table,
             'recurso_grupo': resource_groups_table,
-        }
-    
+        } 
 
 class UserListListView(generic.ObjectListView):
     queryset = models.UserList.objects.annotate(
@@ -40,7 +39,6 @@ class UserListListView(generic.ObjectListView):
     filterset = filtersets.UserListFilterSet
     filterset_form = forms.UserListFilterForm
 
-
 class UserListEditView(generic.ObjectEditView):
     queryset = models.UserList.objects.all()
     form = forms.UserListForm
@@ -48,60 +46,17 @@ class UserListEditView(generic.ObjectEditView):
 class UserListDeleteView(generic.ObjectDeleteView):
     queryset = models.UserList.objects.all()
 
-
-
-
-
-
-######################### BULK EDIT E DELETE #####################################################
-
 class UserListBulkEditView(generic.BulkEditView):
     queryset = models.UserList.objects.all()
     table = tables.UserListTable
     form = forms.UserListBulkEditForm
     #filtersets = filtersets.UserListFilterSet
 
-
 class UserListBulkDeleteView(generic.BulkDeleteView):
     queryset = models.UserList.objects.all()
 
     filtersets = filtersets.UserListFilterSet
     table = tables.UserListTable
-
-
-class ResourceGroupsBulkEditView(generic.BulkEditView):
-    queryset = models.ResourceGroups.objects.all()
-    
-    table = tables.ResourceGroupsTable
-    filterset = filtersets.ResourceGroupsFilterSet
-    form = forms.ResourceGroupsBulkEditForm
-
-
-class ResourceGroupsBulkDeleteView(generic.BulkDeleteView):
-    queryset = models.ResourceGroups.objects.all()
-    
-    table = tables.ResourceGroupsTable
-    filterset = filtersets.ResourceGroupsFilterSet
-
-
-class UserListRuleBulkEditView(generic.BulkEditView):
-    queryset = models.ResourceAccess.objects.all()
-
-    table = tables.UserListRuleTable
-    filtersets = filtersets.UserListRuleFilterSet
-    form = forms.UserListRuleBulkEditForm
-
-
-class UserListRuleBulkDeleteView(generic.BulkDeleteView):
-    queryset = models.ResourceAccess.objects.all()
-    
-    table = tables.UserListRuleTable
-    filtersets = filtersets.UserListRuleFilterSet
-
-
-
-######################### BULK EDIT E DELETE #####################################################
-
 
 
 
@@ -123,7 +78,18 @@ class UserListRuleEditView(generic.ObjectEditView):
 class UserListRuleDeleteView(generic.ObjectDeleteView):
     queryset = models.ResourceAccess.objects.all()
 
+class UserListRuleBulkEditView(generic.BulkEditView):
+    queryset = models.ResourceAccess.objects.all()
 
+    table = tables.UserListRuleTable
+    filtersets = filtersets.UserListRuleFilterSet
+    form = forms.UserListRuleBulkEditForm
+
+class UserListRuleBulkDeleteView(generic.BulkDeleteView):
+    queryset = models.ResourceAccess.objects.all()
+    
+    table = tables.UserListRuleTable
+    filtersets = filtersets.UserListRuleFilterSet
 
 
 
@@ -135,44 +101,68 @@ class UserListRuleDeleteView(generic.ObjectDeleteView):
 class ResourcesView(generic.ObjectView):
     queryset = models.Resources.objects.all()
 
-
 class ResourcesListListView(generic.ObjectListView):
     queryset = models.Resources.objects.all()
 
     table = tables.ResourcesTable
     filterset = filtersets.ResourcesFilterSet
-    
+    filterset_form = forms.ResourcesFormFilterForm
 
 class ResourcesListEditView(generic.ObjectEditView):
     queryset = models.Resources.objects.all()
     form = forms.ResourcesForm
 
-
 class ResourcesListDeleteView(generic.ObjectDeleteView):
     queryset = models.Resources.objects.all()
 
+class ResourcesBulkEditView(generic.BulkEditView):
+    queryset = models.Resources.objects.all()
+
+    table = tables.ResourcesTable
+    filtersets = filtersets.ResourcesFilterSet
+    form = forms.ResourcesBulkEditForm
+
+class ResourcesBulkDeleteView(generic.BulkDeleteView):
+    queryset = models.Resources.objects.all()
+    
+    table = tables.ResourcesTable
+    filtersets = filtersets.ResourcesFilterSet
 
 
 
 
-# environment LIST
+
+# Environment LIST
 class EnvironmentView(generic.ObjectView):
     queryset = models.Environment.objects.all()
-
 
 class EnvironmentListListView(generic.ObjectListView):
     queryset = models.Environment.objects.all()
 
     table = tables.EnvironmentTable
     filterset = filtersets.EnvironmentFilterSet
+    filterset_form = forms.EnvironmentFormFilterForm
 
 class EnvironmentListEditView(generic.ObjectEditView):
     queryset = models.Environment.objects.all()
     form = forms.EnvironmentForm
 
-
 class EnvironmentListDeleteView(generic.ObjectDeleteView):
     queryset = models.Environment.objects.all()
+
+class EnvironmentBulkEditView(generic.BulkEditView):
+    queryset = models.Environment.objects.all()
+
+    table = tables.EnvironmentTable
+    filtersets = filtersets.EnvironmentFilterSet
+    form = forms.EnvironmentBulkEditForm
+
+class EnvironmentBulkDeleteView(generic.BulkDeleteView):
+    queryset = models.Environment.objects.all()
+    
+    table = tables.EnvironmentTable
+    filtersets = filtersets.EnvironmentFilterSet
+
 
 
 
@@ -197,23 +187,33 @@ class GroupView(generic.ObjectView):
             'groups': table,
             'related_models': related_models,
         }
-
    
-
-
 class GroupListListView(generic.ObjectListView):
     queryset = models.Groups.objects.all()
 
     table = tables.GroupTable
     filterset = filtersets.GroupsFilterSet
+    filterset_form = forms.GroupsFormFilterForm
 
 class GroupListEditView(generic.ObjectEditView):
     queryset = models.Groups.objects.all()
     form = forms.GroupForm
 
-
 class GroupListDeleteView(generic.ObjectDeleteView):
     queryset = models.Groups.objects.all()
+
+class GroupListBulkEditView(generic.BulkEditView):
+    queryset = models.Groups.objects.all()
+
+    table = tables.GroupTable
+    filtersets = filtersets.GroupsFilterSet
+    form = forms.GroupsBulkEditForm
+
+class GroupListBulkDeleteView(generic.BulkDeleteView):
+    queryset = models.Groups.objects.all()
+    
+    table = tables.GroupTable
+    filtersets = filtersets.GroupsFilterSet
 
 
 
@@ -221,41 +221,66 @@ class GroupListDeleteView(generic.ObjectDeleteView):
 class ApproverView(generic.ObjectView):
     queryset = models.Approver.objects.all()
 
-
 class ApproverListListView(generic.ObjectListView):
     queryset = models.Approver.objects.all()
 
     table = tables.ApproverTable
     filterset = filtersets.ApproverFilterSet
+    filterset_form = forms.ApproverFormFilterForm
 
 class ApproverListEditView(generic.ObjectEditView):
     queryset = models.Approver.objects.all()
     form = forms.ApproverForm
 
-
 class ApproverListDeleteView(generic.ObjectDeleteView):
     queryset = models.Approver.objects.all()
 
+class ApproverBulkEditView(generic.BulkEditView):
+    queryset = models.Approver.objects.all()
+
+    table = tables.ApproverTable
+    filtersets = filtersets.ApproverFilterSet
+    form = forms.ApproverBulkEditForm
+
+class ApproverBulkDeleteView(generic.BulkDeleteView):
+    queryset = models.Approver.objects.all()
+    
+    table = tables.ApproverTable
+    filtersets = filtersets.ApproverFilterSet
 
 
-# Approver LIST
+
+# Sector LIST
 class SectorView(generic.ObjectView):
     queryset = models.Sector.objects.all()
-
 
 class SectorListListView(generic.ObjectListView):
     queryset = models.Sector.objects.all()
 
     table = tables.SectorTable
     filterset = filtersets.SectorFilterSet
+    filterset_form = forms.SectorFormFilterForm
 
 class SectorListEditView(generic.ObjectEditView):
     queryset = models.Sector.objects.all()
     form = forms.SectorForm
 
-
 class SectorListDeleteView(generic.ObjectDeleteView):
     queryset = models.Sector.objects.all()
+
+class SectorBulkEditView(generic.BulkEditView):
+    queryset = models.Sector.objects.all()
+
+    table = tables.SectorTable
+    filtersets = filtersets.SectorFilterSet
+    form = forms.SectorBulkEditForm
+
+class SectorBulkDeleteView(generic.BulkDeleteView):
+    queryset = models.Sector.objects.all()
+    
+    table = tables.SectorTable
+    filtersets = filtersets.SectorFilterSet
+
 
 
 
@@ -264,7 +289,6 @@ class SectorListDeleteView(generic.ObjectDeleteView):
 class ResourceGroupsView(generic.ObjectView):
 
     queryset = models.ResourceGroups.objects.all()
-
 
 class ResourceGroupsListListView(generic.ObjectListView):
     queryset = models.ResourceGroups.objects.all()
@@ -277,10 +301,18 @@ class ResourceGroupsListEditView(generic.ObjectEditView):
     queryset = models.ResourceGroups.objects.all()
     form = forms.ResourceGroupsForm
 
-
 class ResourceGroupsListDeleteView(generic.ObjectDeleteView):
     queryset = models.ResourceGroups.objects.all()
 
+class ResourceGroupsBulkEditView(generic.BulkEditView):
+    queryset = models.ResourceGroups.objects.all()
+    
+    table = tables.ResourceGroupsTable
+    filterset = filtersets.ResourceGroupsFilterSet
+    form = forms.ResourceGroupsBulkEditForm
 
-
-
+class ResourceGroupsBulkDeleteView(generic.BulkDeleteView):
+    queryset = models.ResourceGroups.objects.all()
+    
+    table = tables.ResourceGroupsTable
+    filterset = filtersets.ResourceGroupsFilterSet

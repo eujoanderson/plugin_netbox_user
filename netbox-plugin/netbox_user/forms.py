@@ -12,6 +12,7 @@ from utilities.forms.widgets import APISelectMultiple, DatePicker
 from django.urls import reverse_lazy
 
 
+## User List 
 class UserListForm(NetBoxModelForm):
     comments = CommentField()
 
@@ -32,7 +33,6 @@ class UserListForm(NetBoxModelForm):
     class Meta:
         model = UserList
         fields = ('name','groups', 'status_user','setor','comments','tags',)
-
 
 class UserListBulkEditForm(NetBoxModelBulkEditForm):    
 
@@ -89,7 +89,7 @@ class UserListFilterForm(NetBoxModelFilterSetForm):
         fields = ['name','groups', 'status_user','setor','tags',]  
 
 
-############################################################################################################################
+## User List Rule 
 
 class UserListRuleForm(NetBoxModelForm):
 
@@ -131,12 +131,6 @@ class UserListRuleFilterForm(NetBoxModelFilterSetForm):
         required=False
     )
 
-    tags = forms.ModelMultipleChoiceField(
-        queryset=Tag.objects.all(),
-        required=False,
-        help_text="Selecione as tags"
-    )
-
     recurso = forms.ModelMultipleChoiceField(
         queryset=Resources.objects.all(),
         required=False,
@@ -147,6 +141,12 @@ class UserListRuleFilterForm(NetBoxModelFilterSetForm):
         required=False,
     )
 
+    tags = forms.ModelMultipleChoiceField(
+        queryset=Tag.objects.all(),
+        required=False,
+        help_text="Selecione as tags"
+    )
+
     class Meta:
         model = UserList 
         fields = ['user','recurso', 'tipo_acesso', 'data_concessao',
@@ -155,6 +155,7 @@ class UserListRuleFilterForm(NetBoxModelFilterSetForm):
 class UserListRuleBulkEditForm(NetBoxModelBulkEditForm):
     user = forms.ModelChoiceField(queryset=UserList.objects.all(), required=False)
     recurso = forms.ModelChoiceField(queryset=Resources.objects.all(), required=False)
+    tags =  forms.ModelChoiceField(queryset=Tag.objects.all(), required=False)
     aprovador = forms.ModelChoiceField(queryset=Approver.objects.all(), required=False)
     ambiente = forms.ModelMultipleChoiceField(queryset=Environment.objects.all(), required=False)
     data_concessao = forms.DateField(widget=DatePicker(attrs={'autocomplete': 'off'}), required=False)
@@ -171,15 +172,8 @@ class UserListRuleBulkEditForm(NetBoxModelBulkEditForm):
         ('Informações', ('aprovador', 'ambiente', )), 
     )
 
-    def clean(self):
-        pdb.set_trace()  # Pausa a execução aqui
-        cleaned_data = super().clean()  # Valida os dados
 
-        # Agora você pode verificar os erros depois de validar
-        if self.errors:
-            for field, error in self.errors.items():
-                print(f"{field}: {error}")
-
+## Resouces Groups
 class ResourceGroupsForm(NetBoxModelForm):
 
     recurso = forms.ModelChoiceField(queryset=Resources.objects.all(), required=True)
@@ -195,7 +189,6 @@ class ResourceGroupsForm(NetBoxModelForm):
         fields = (
             'recurso', 'groupslist','tipo_acesso', 'aprovador', 'ambiente','comments','tags'
         )
-
 
 class ResourceGroupsFilterForm(NetBoxModelFilterSetForm):
     model = ResourceGroups
@@ -218,7 +211,6 @@ class ResourceGroupsFilterForm(NetBoxModelFilterSetForm):
             'recurso', 'groupslist','tipo_acesso', 'aprovador', 'ambiente','tags'
         )
 
-
 class ResourceGroupsBulkEditForm(NetBoxModelBulkEditForm):    
     model = ResourceGroups
 
@@ -231,9 +223,8 @@ class ResourceGroupsBulkEditForm(NetBoxModelBulkEditForm):
         ('Informações', ('groupslist', 'aprovador', 'ambiente')), 
     )
 
-### NOVOS CAMPOS
 
-
+### Resourcer
 class ResourcesForm(NetBoxModelForm):
     comments = CommentField()
 
@@ -242,10 +233,29 @@ class ResourcesForm(NetBoxModelForm):
         fields = (
             'recurso',  'comments', 'tags'
         )
+        
+class ResourcesFormFilterForm(NetBoxModelFilterSetForm):
+    model = Resources
+    recurso = forms.ModelChoiceField(queryset=Resources.objects.all(), required=False)
+    tags = forms.ModelMultipleChoiceField(
+        queryset=Tag.objects.all(),
+        required=False,
+        help_text="Selecione as tags"
+    )
+    class Meta:
+        model = Resources
+        fields = (
+            'recurso',  'comments', 'tags'
+        )
 
+class ResourcesBulkEditForm(NetBoxModelBulkEditForm):    
+
+    model = Resources
+
+
+
+## Ambientes 
 class EnvironmentForm(NetBoxModelForm):
-    comments = CommentField()
-
 
     class Meta:
         model = Environment
@@ -253,6 +263,28 @@ class EnvironmentForm(NetBoxModelForm):
             'ambiente',  'comments', 'tags'
         )
 
+class EnvironmentFormFilterForm(NetBoxModelFilterSetForm):
+    model = Environment
+    ambiente = forms.ModelChoiceField(queryset=Environment.objects.all(), required=False)
+    tags = forms.ModelMultipleChoiceField(
+        queryset=Tag.objects.all(),
+        required=False,
+        help_text="Selecione as tags"
+    )
+    class Meta:
+        model = Environment
+        fields = (
+            'ambiente', 'tags'
+        )
+
+class EnvironmentBulkEditForm(NetBoxModelBulkEditForm):    
+
+    model = Environment
+
+    
+
+
+## Groups 
 class GroupForm(NetBoxModelForm):
 
     comments = CommentField()
@@ -262,6 +294,31 @@ class GroupForm(NetBoxModelForm):
             'grupo',  'comments', 'tags'
         )
 
+class GroupsFormFilterForm(NetBoxModelFilterSetForm):
+    model = Groups
+    grupo = forms.ModelChoiceField(queryset=Groups.objects.all(), required=False)
+    tags = forms.ModelMultipleChoiceField(
+        queryset=Tag.objects.all(),
+        required=False,
+        help_text="Selecione as tags"
+    )
+    class Meta:
+        model = Groups
+        fields = (
+            'grupo', 'tags'
+        )
+
+class GroupsBulkEditForm(NetBoxModelBulkEditForm):    
+
+    model = Groups
+
+
+
+
+
+
+
+## Approver 
 class ApproverForm(NetBoxModelForm):
 
     comments = CommentField()
@@ -272,6 +329,29 @@ class ApproverForm(NetBoxModelForm):
             'aprovador','comments', 'tags'
         )
 
+class ApproverFormFilterForm(NetBoxModelFilterSetForm):
+    model = Approver
+    aprovador = forms.ModelChoiceField(queryset=Approver.objects.all(), required=False)
+    tags = forms.ModelMultipleChoiceField(
+        queryset=Tag.objects.all(),
+        required=False,
+        help_text="Selecione as tags"
+    )
+    class Meta:
+        model = Groups
+        fields = (
+            'aprovador', 'tags'
+        )
+
+class ApproverBulkEditForm(NetBoxModelBulkEditForm):    
+
+    model = Approver
+
+
+
+
+
+## Sector 
 class SectorForm(NetBoxModelForm):
 
     comments = CommentField()
@@ -281,8 +361,57 @@ class SectorForm(NetBoxModelForm):
             'setor',  'comments', 'tags'
         )
 
+class SectorFormFilterForm(NetBoxModelFilterSetForm):
+    model = Sector
+    setor = forms.ModelChoiceField(queryset=Sector.objects.all(), required=False)
+    tags = forms.ModelMultipleChoiceField(
+        queryset=Tag.objects.all(),
+        required=False,
+        help_text="Selecione as tags"
+    )
+    class Meta:
+        model = Sector
+        fields = (
+            'setor', 'tags'
+        )
+
+class SectorBulkEditForm(NetBoxModelBulkEditForm):    
+
+    model = Sector
 
 
 
 
 
+## Resouces 
+class ResourcesFormFilterForm(NetBoxModelFilterSetForm):
+    model = Resources
+    recurso = forms.ModelChoiceField(queryset=Resources.objects.all(), required=False)
+    tags = forms.ModelMultipleChoiceField(
+        queryset=Tag.objects.all(),
+        required=False,
+        help_text="Selecione as tags"
+    )
+    class Meta:
+        model = Resources
+        fields = (
+            'recurso',  'comments', 'tags'
+        )
+
+class ResourcesBulkEditForm(NetBoxModelBulkEditForm):    
+
+    model = Resources
+
+class ResourcesFormFilterForm(NetBoxModelFilterSetForm):
+    model = Resources
+    recurso = forms.ModelChoiceField(queryset=Resources.objects.all(), required=False)
+    tags = forms.ModelMultipleChoiceField(
+        queryset=Tag.objects.all(),
+        required=False,
+        help_text="Selecione as tags"
+    )
+    class Meta:
+        model = Resources
+        fields = (
+            'recurso',  'comments', 'tags'
+        )

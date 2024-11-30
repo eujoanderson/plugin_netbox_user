@@ -1,15 +1,28 @@
+import django_filters
 from netbox.filtersets import NetBoxModelFilterSet
-from .models import ResourceAccess, UserList, Resources, Groups, Approver, Sector, ResourceGroups, Environment
+from .models import ResourceAccess, UserList, Resources, Groups, Approver, Sector, ResourceGroups, Environment, Tag
 from django.db.models import Q
 
 
 
 class UserListRuleFilterSet(NetBoxModelFilterSet):
 
+    user = django_filters.ModelMultipleChoiceFilter(queryset=UserList.objects.all(), required=False)
+
+    aprovador = django_filters.ModelMultipleChoiceFilter(queryset=Approver.objects.all(), required=False)
+    
+    recurso = django_filters.ModelMultipleChoiceFilter(queryset=Resources.objects.all(), required=False)
+
+    tags = django_filters.ModelMultipleChoiceFilter(
+        queryset=Tag.objects.all(),
+        required=False,
+        label="Selecione as tags"
+    )
+
     class Meta:
         model = ResourceAccess
         fields = ('id', 'user', 'recurso', 'tipo_acesso', 'data_concessao',
-                  'data_expiracao', 'aprovador', 'justificativa', 'status', 'ambiente',)
+                  'data_expiracao', 'aprovador', 'justificativa', 'status', 'ambiente','tags')
     
     def search(self, queryset, name, value):
         if not value.strip():
@@ -21,9 +34,17 @@ class UserListRuleFilterSet(NetBoxModelFilterSet):
 
 class UserListFilterSet(NetBoxModelFilterSet):
 
+    name = django_filters.ModelMultipleChoiceFilter(queryset=UserList.objects.all(), required=False)
+
+    tags = django_filters.ModelMultipleChoiceFilter(
+        queryset=Tag.objects.all(),
+        required=False,
+        label="Selecione as tags"
+    )
+
     class Meta:
         model = UserList
-        fields = ('name','groups','status_user','setor',)
+        fields = ('name','groups','setor','tags')
 
     def search(self, queryset, name, value):
         if not value.strip():
@@ -112,10 +133,20 @@ class ResourcesFilterSet(NetBoxModelFilterSet):
 
 
 class ResourceGroupsFilterSet(NetBoxModelFilterSet):
+    recurso = django_filters.ModelMultipleChoiceFilter(queryset=Resources.objects.all(), required=False)
+    groupslist = django_filters.ModelMultipleChoiceFilter(queryset=Groups.objects.all(), required=False)
+    aprovador = django_filters.ModelMultipleChoiceFilter(queryset=Approver.objects.all(), required=False)
+    ambiente = django_filters.ModelMultipleChoiceFilter(queryset=Environment.objects.all(), required=False)
+
+    tags = django_filters.ModelMultipleChoiceFilter(
+        queryset=Tag.objects.all(),
+        required=False,
+        label="Selecione as tags"
+    )
 
     class Meta:
         model = ResourceGroups
-        fields = ('recurso','groupslist', 'tipo_acesso', 'aprovador','ambiente','comments',)
+        fields = ('recurso','groupslist', 'tipo_acesso', 'aprovador','ambiente','tags',)
 
 
     def search(self, queryset, name, value):

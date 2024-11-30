@@ -8,6 +8,8 @@ urlpatterns = (
     path('plugin-user/', views.UserListListView.as_view(), name='userlist_list'),
     path('plugin-user/add/', views.UserListEditView.as_view(), name='userlist_add'),
     path('plugin-user/<int:pk>/', views.UserListView.as_view(), name='userlist'),
+	path('plugin-user/edit/', views.UserListBulkEditView.as_view(), name='userlist_bulk_edit'),
+	path('plugin-user/delete/', views.UserListBulkDeleteView.as_view(), name='userlist_bulk_delete'),
     path('plugin-user/<int:pk>/edit/', views.UserListEditView.as_view(), name='userlist_edit'),
     path('plugin-user/<int:pk>/delete/', views.UserListDeleteView.as_view(), name='userlist_delete'),
 
@@ -19,6 +21,10 @@ urlpatterns = (
     path('rules/', views.UserListRuleListView.as_view(), name='resourceaccess_list'),
     path('rules/add/', views.UserListRuleEditView.as_view(), name='resourceaccess_add'),
     path('rules/<int:pk>/', views.UserListRuleView.as_view(), name='pluginuserrule'),
+	
+    path('rules/edit/', views.UserListRuleBulkEditView.as_view(), name='resourceaccess_bulk_edit'),
+	path('rules/delete/', views.UserListRuleBulkDeleteView.as_view(), name='resourceaccess_bulk_delete'),
+
     path('rules/<int:pk>/edit/', views.UserListRuleEditView.as_view(), name='resourceaccess_edit'),
     path('rules/<int:pk>/delete/', views.UserListRuleDeleteView.as_view(), name='resourceaccess_delete'),
 
@@ -94,6 +100,10 @@ urlpatterns = (
     path('resourcegroups/', views.ResourceGroupsListListView.as_view(), name='resourcegroups_list'),
     path('resourcegroups/add/', views.ResourceGroupsListEditView.as_view(), name='resourcegroups_add'),
     path('resourcegroups/<int:pk>/', views.ResourceGroupsView.as_view(), name='resourcegroups'),
+	
+	path('resourcegroups/edit/', views.ResourceGroupsBulkEditView.as_view(), name='resourcegroups_bulk_edit'),
+	path('resourcegroups/delete/', views.ResourceGroupsBulkDeleteView.as_view(), name='resourcegroups_bulk_delete'),
+	
     path('resourcegroups/<int:pk>/edit/', views.ResourceGroupsListEditView.as_view(), name='resourcegroups_edit'),
     path('resourcegroups/<int:pk>/delete/', views.ResourceGroupsListDeleteView.as_view(), name='resourcegroups_delete'),
 

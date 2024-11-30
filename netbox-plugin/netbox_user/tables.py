@@ -16,7 +16,7 @@ class UserListTable(NetBoxTable):
 
     rules_count = tables.Column(
         verbose_name="Recursos",
-        accessor="rules.count", 
+        accessor="total_resources_count", 
     )
 
     status_user = tables.Column(
@@ -24,13 +24,11 @@ class UserListTable(NetBoxTable):
     )
 
     tags = TagColumn()
-    
-    status_user = ChoiceFieldColumn()
 
     class Meta(NetBoxTable.Meta):
         model = UserList
-        fields = ('pk', 'id', 'name', 'groups', 'comments', 'status_user','setor','tags','rules_count' )
-        default_columns = ('name', 'groups','status_user','setor', 'tags','rules_count' )
+        fields = ('pk', 'id', 'name', 'groups', 'comments', 'status_user','setor','rules_count','tags',)
+        default_columns = ('name', 'groups','status_user','setor', 'rules_count','tags', )
 
 
 class UserListRuleTable(NetBoxTable):

@@ -10,9 +10,11 @@ from django.core.exceptions import ValidationError
 
 class Resources(NetBoxModel):
     recurso = models.CharField(max_length=100,unique=True, blank=True)
-
     comments = models.TextField(blank=True)
-
+    
+    clone_fields = (
+        'tags',
+    )
     class Meta:
         ordering = ('recurso',)
         verbose_name = "Recurso"
@@ -22,11 +24,20 @@ class Resources(NetBoxModel):
     
     def get_absolute_url(self):
         return reverse('plugins:netbox_user:resourceslist', args=[self.pk])
+    
+    def clone(self):
+        attrs = super().clone()
+        attrs['extra-value'] = 123
+        return attrs
 
 
 class Environment(NetBoxModel):
     ambiente = models.CharField(max_length=100,unique=True, blank=True)
     comments = models.TextField(blank=True)
+
+    clone_fields = (
+        'tags',
+    )
 
     class Meta:
         ordering = ('ambiente', )
@@ -37,12 +48,20 @@ class Environment(NetBoxModel):
     
     def get_absolute_url(self):
         return reverse('plugins:netbox_user:environmentlist', args=[self.pk])
+    
+    def clone(self):
+        attrs = super().clone()
+        attrs['extra-value'] = 123
+        return attrs
 
 
 class Approver(NetBoxModel):
     aprovador = models.CharField(max_length=100,unique=True, blank=True)
     comments = models.TextField(blank=True)
 
+    clone_fields = (
+        'tags',
+    )
     class Meta:
         ordering = ('aprovador', )
         verbose_name = "Aprovador"
@@ -52,11 +71,20 @@ class Approver(NetBoxModel):
     
     def get_absolute_url(self):
         return reverse('plugins:netbox_user:approverlist', args=[self.pk])
+    
+    def clone(self):
+        attrs = super().clone()
+        attrs['extra-value'] = 123
+        return attrs
 
 
 class Sector(NetBoxModel):
     setor = models.CharField(max_length=100,unique=True, blank=True)
     comments = models.TextField(blank=True)
+
+    clone_fields = (
+        'tags',
+    )
 
     class Meta:
         ordering = ('setor',)
@@ -67,6 +95,11 @@ class Sector(NetBoxModel):
     
     def get_absolute_url(self):
         return reverse('plugins:netbox_user:sectorlist', args=[self.pk])
+    
+    def clone(self):
+        attrs = super().clone()
+        attrs['extra-value'] = 123
+        return attrs
 
 
 
@@ -79,8 +112,6 @@ class ActionChoicesStatusUserColor(ChoiceSet):
         ('active', 'Active', 'green'),
         ('deactivate', 'Deactivate', 'red'),
     ]
-
-
 class ActionChoicesSetor(ChoiceSet):
     key = 'UserList.setor'
 
@@ -89,15 +120,11 @@ class ActionChoicesSetor(ChoiceSet):
         ('desenvolvimento', 'Desenvolvimento'),
         ('administrativo', 'Administrativo'),
     ]
-
-
 class ActionChoices(ChoiceSet):
-
     CHOICES = [
         ('active', 'Active', 'green'),
         ('expired', 'Expired', 'red'),
     ]
-
 class ActionChoicesType(ChoiceSet):
     key = 'ResourceAccess.tipo_acesso'
 
@@ -111,6 +138,10 @@ class ActionChoicesType(ChoiceSet):
 class Groups(NetBoxModel):
     grupo = models.CharField(max_length=100, unique=True, blank=True)
     comments = models.TextField(blank=True)
+
+    clone_fields = (
+         'tags',
+    )
 
     class Meta:
         ordering = ('grupo', )
@@ -140,6 +171,10 @@ class UserList(NetBoxModel):
         choices=ActionChoicesStatusUserColor._choices,
         verbose_name="Status User"
     )
+    
+    clone_fields = (
+        'tags','groups', 'setor',
+    )
 
     class Meta:
         ordering = ('name',)
@@ -157,17 +192,16 @@ class UserList(NetBoxModel):
     def get_status_user_color(self):
         return ActionChoicesStatusUserColor.colors.get(self.status_user)
     
+    def total_resources_count(self):
+        user_resources_count = ResourceAccess.objects.filter(user=self).count() 
+        group_resources_count = ResourceGroups.objects.filter(groupslist__in=self.groups.all()).count()
+
+        return user_resources_count + group_resources_count
+    
     def save(self, *args, **kwargs):
         # Salva o usuário normalmente
         super().save(*args, **kwargs)
 
-
-
-## Falta realizar o processo ainda
-    def clone(self):
-        attrs = super().clone()
-        attrs['extra-value'] = 123
-        return attrs    
 
 
 class ResourceAccess(NetBoxModel):
@@ -204,7 +238,8 @@ class ResourceAccess(NetBoxModel):
     aprovador = models.ForeignKey(
         to=Approver,
         on_delete=models.CASCADE,
-        related_name='rules'
+        related_name='rules',
+        blank=True
     )
 
     ambiente = models.ManyToManyField(Environment, blank=True)
@@ -212,6 +247,10 @@ class ResourceAccess(NetBoxModel):
     status = models.CharField(
         max_length=30,
         choices=ActionChoices._choices,
+    )
+
+    clone_fields = (
+        'recurso', 'tipo_acesso', 'aprovador', 'status','ambiente','tags'
     )
 
     class Meta:
@@ -248,11 +287,6 @@ class ResourceAccess(NetBoxModel):
                 })
         super().clean()
 
-    ## Falta realizar o processo ainda
-    def clone(self):
-        attrs = super().clone()
-        attrs['extra-value'] = 123
-        return attrs
     
 
 
@@ -286,8 +320,12 @@ class ResourceGroups(NetBoxModel):
     ambiente = models.ManyToManyField(
         Environment, blank=True
     )
-
     comments = models.TextField(blank=True)
+
+
+    clone_fields = (
+        'groupslist', 'tipo_acesso', 'aprovador','ambiente','tags'
+    )
 
     class Meta:
         ordering = ('groupslist','index' )
@@ -298,9 +336,15 @@ class ResourceGroups(NetBoxModel):
         return self.recurso.recurso
     
     def clean(self):
-        # Valida se o recurso já existe no mesmo grupo
-        if ResourceGroups.objects.filter(groupslist=self.groupslist, recurso=self.recurso).exists():
+        
+        existing_resource = ResourceGroups.objects.filter(
+            groupslist=self.groupslist, 
+            recurso=self.recurso
+        ).exclude(pk=self.pk) 
+        
+        if existing_resource.exists():
             raise ValidationError(f'O recurso "{self.recurso}" já está atribuído a este grupo.')
+        
         super().clean()
 
     def get_absolute_url(self):
@@ -312,4 +356,3 @@ class ResourceGroups(NetBoxModel):
             last_index = ResourceGroups.objects.filter(groupslist=self.groupslist).aggregate(Max('index'))['index__max']
             self.index = (last_index or 0) + 1  # Start from 1 if no records exist
         super().save(*args, **kwargs)
-

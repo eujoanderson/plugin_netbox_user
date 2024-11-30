@@ -17,29 +17,19 @@ class UserListView(generic.ObjectView):
 
         resource_groups_list = []
         for grupo in instance.groups.all():
-            # Recupera todos os 'ResourceGroups' para o grupo específico
-            resource_groups = grupo.resource_group_rules.all()  # Usando o related_name 'resource_group_rules'
 
-            # Para cada recurso no grupo, crie uma linha na tabela
-
+            resource_groups = grupo.resource_group_rules.all() 
             for rg in resource_groups:
-                # Instâncias do modelo
                 resource_groups_list.append(rg)
 
-        # Passando instâncias de modelo para a tabela
         resource_groups_table = tables.ResourceGroupsTable(resource_groups_list)
-
-        # Configurando a tabela
         resource_groups_table.configure(request)
 
         return {
             'recurso': table,
             'recurso_grupo': resource_groups_table,
         }
-
     
-
-
 
 class UserListListView(generic.ObjectListView):
     queryset = models.UserList.objects.annotate(
@@ -48,38 +38,95 @@ class UserListListView(generic.ObjectListView):
 
     table = tables.UserListTable
     filterset = filtersets.UserListFilterSet
-    template_name = 'netbox_user/buttons.html'
-
+    filterset_form = forms.UserListFilterForm
 
 
 class UserListEditView(generic.ObjectEditView):
     queryset = models.UserList.objects.all()
     form = forms.UserListForm
 
-
 class UserListDeleteView(generic.ObjectDeleteView):
     queryset = models.UserList.objects.all()
+
+
+
+
+
+
+######################### BULK EDIT E DELETE #####################################################
+
+class UserListBulkEditView(generic.BulkEditView):
+    queryset = models.UserList.objects.all()
+    table = tables.UserListTable
+    form = forms.UserListBulkEditForm
+    #filtersets = filtersets.UserListFilterSet
+
+
+class UserListBulkDeleteView(generic.BulkDeleteView):
+    queryset = models.UserList.objects.all()
+
+    filtersets = filtersets.UserListFilterSet
+    table = tables.UserListTable
+
+
+class ResourceGroupsBulkEditView(generic.BulkEditView):
+    queryset = models.ResourceGroups.objects.all()
+    
+    table = tables.ResourceGroupsTable
+    filterset = filtersets.ResourceGroupsFilterSet
+    form = forms.ResourceGroupsBulkEditForm
+
+
+class ResourceGroupsBulkDeleteView(generic.BulkDeleteView):
+    queryset = models.ResourceGroups.objects.all()
+    
+    table = tables.ResourceGroupsTable
+    filterset = filtersets.ResourceGroupsFilterSet
+
+
+class UserListRuleBulkEditView(generic.BulkEditView):
+    queryset = models.ResourceAccess.objects.all()
+
+    table = tables.UserListRuleTable
+    filtersets = filtersets.UserListRuleFilterSet
+    form = forms.UserListRuleBulkEditForm
+
+
+class UserListRuleBulkDeleteView(generic.BulkDeleteView):
+    queryset = models.ResourceAccess.objects.all()
+    
+    table = tables.UserListRuleTable
+    filtersets = filtersets.UserListRuleFilterSet
+
+
+
+######################### BULK EDIT E DELETE #####################################################
+
+
 
 
 # RESOURCES RULE LIST
 class UserListRuleView(generic.ObjectView):
     queryset = models.ResourceAccess.objects.all()
 
-
 class UserListRuleListView(generic.ObjectListView):
     queryset = models.ResourceAccess.objects.all()
     table = tables.UserListRuleTable
 
     filterset = filtersets.UserListRuleFilterSet
-
-
+    filterset_form = forms.UserListRuleFilterForm
+    
 class UserListRuleEditView(generic.ObjectEditView):
     queryset = models.ResourceAccess.objects.all()
     form = forms.UserListRuleForm
     
-
 class UserListRuleDeleteView(generic.ObjectDeleteView):
     queryset = models.ResourceAccess.objects.all()
+
+
+
+
+
 
 
 
@@ -131,6 +178,7 @@ class EnvironmentListDeleteView(generic.ObjectDeleteView):
 
 # Group LIST
 class GroupView(generic.ObjectView):
+    queryset = models.Groups.objects.all()
     def get_extra_context(self, request, instance):
         table = tables.ResourceGroupsTable(instance.resource_group_rules.all())
         table.configure(request)
@@ -141,16 +189,16 @@ class GroupView(generic.ObjectView):
         users_table = tables.UserListTable(users)
         users_table.configure(request)
 
-        related_models = (
+        related_models = [
             (instance.users.all(), 'users'),  
-        )
+        ]
 
         return {
             'groups': table,
             'related_models': related_models,
         }
 
-    queryset = models.Groups.objects.all()
+   
 
 
 class GroupListListView(generic.ObjectListView):
@@ -223,6 +271,7 @@ class ResourceGroupsListListView(generic.ObjectListView):
 
     table = tables.ResourceGroupsTable
     filterset = filtersets.ResourceGroupsFilterSet
+    filterset_form = forms.ResourceGroupsFilterForm
 
 class ResourceGroupsListEditView(generic.ObjectEditView):
     queryset = models.ResourceGroups.objects.all()

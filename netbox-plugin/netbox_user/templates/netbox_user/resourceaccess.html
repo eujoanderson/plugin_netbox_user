@@ -1,5 +1,6 @@
 {% extends 'generic/object.html' %}
 
+
 {% block content %}
   <div class="row mb-3">
     <div class="col col-md-6">
@@ -17,7 +18,11 @@
             <tr>
               <th scope="row">Setor</th>
               <td>
-                <a href="{{ object.user.get_absolute_url }}"> {% if object.user.setor.exists %}{{ object.user.setor.all|join:", " }}{% endif %}</a>
+                {% for setor in object.user.setor.all %}
+                  <a href="{{ setor.get_absolute_url }}">{{ setor.setor }} {% if setor.exists %}{{ setor.all|join:", " }}{% endif %}</a>
+                {% endfor %}
+                
+                <a href="{{ object.user.name.get_absolute_url }}"> </a>
               </td>
             </tr>
             

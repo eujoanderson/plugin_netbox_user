@@ -130,7 +130,7 @@ urlpatterns = (
     path('resourcegroups/', views.ResourceGroupsListListView.as_view(), name='resourcegroups_list'),
     path('resourcegroups/add/', views.ResourceGroupsListEditView.as_view(), name='resourcegroups_add'),
     path('resourcegroups/<int:pk>/', views.ResourceGroupsView.as_view(), name='resourcegroups'),
-
+ 
     #### Resources Groups BULK
 	path('resourcegroups/edit/', views.ResourceGroupsBulkEditView.as_view(), name='resourcegroups_bulk_edit'),
 	path('resourcegroups/delete/', views.ResourceGroupsBulkDeleteView.as_view(), name='resourcegroups_bulk_delete'),

@@ -176,6 +176,12 @@ class UserList(NetBoxModel):
         'tags','groups', 'setor',
     )
 
+    prerequisite_models = (
+        'netbox_user.Groups',
+        'netbox_user.Sector',
+    )
+
+
     class Meta:
         ordering = ('name',)
         verbose_name = "Usuário"
@@ -253,6 +259,11 @@ class ResourceAccess(NetBoxModel):
         'recurso', 'tipo_acesso', 'aprovador', 'status','ambiente','tags'
     )
 
+    prerequisite_models = (
+        'netbox_user.Environment',
+        'netbox_user.Approver',
+    )
+
     class Meta:
         ordering = ('user', 'index')
         verbose_name = "Recursos dos Usuário"
@@ -325,6 +336,13 @@ class ResourceGroups(NetBoxModel):
 
     clone_fields = (
         'groupslist', 'tipo_acesso', 'aprovador','ambiente','tags'
+    )
+
+    prerequisite_models = (
+        'netbox_user.Environment',
+        'netbox_user.Approver',
+        'netbox_user.Groups',
+        'netbox_user.Resources',
     )
 
     class Meta:

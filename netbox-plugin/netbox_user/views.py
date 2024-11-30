@@ -174,13 +174,12 @@ class GroupView(generic.ObjectView):
         table.configure(request)
 
         users = instance.users.all()  
-
         
         users_table = tables.UserListTable(users)
         users_table.configure(request)
 
         related_models = [
-            (instance.users.all(), 'users'),  
+            (users, 'users'),
         ]
 
         return {

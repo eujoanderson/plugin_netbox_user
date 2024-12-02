@@ -302,23 +302,8 @@ class SectorBulkDeleteView(generic.BulkDeleteView):
 
 # Groups Resources LIST
 class ResourceGroupsView(generic.ObjectView):
-
     queryset = models.ResourceGroups.objects.all()
 
-    def get_extra_context(self, request, instance):
-        users = instance.groupslist.users.all() 
-        print(users) 
-        
-        users_table = tables.UserListTable(users)
-        users_table.configure(request)
-
-        related_models = [
-            (users, 'setor'),
-        ]
-        
-        return {
-            'related_models': related_models,
-        }
 
 class ResourceGroupsListListView(generic.ObjectListView):
     queryset = models.ResourceGroups.objects.all()

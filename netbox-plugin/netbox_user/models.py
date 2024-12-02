@@ -125,6 +125,14 @@ class ActionChoices(ChoiceSet):
         ('active', 'Active', 'green'),
         ('expired', 'Expired', 'red'),
     ]
+
+class ActionChoicesPeriodo(ChoiceSet):
+    key = 'ResourceAccess.periodo'
+    CHOICES = [
+        ('permanente', 'Permanente', 'yellow'),
+        ('temporario', 'Temporário', 'purple'),
+    ]
+
 class ActionChoicesType(ChoiceSet):
     key = 'ResourceAccess.tipo_acesso'
 
@@ -217,6 +225,11 @@ class ResourceAccess(NetBoxModel):
         related_name='rules'
     )
 
+    periodo = models.CharField(
+        max_length=30,
+        choices=ActionChoicesPeriodo._choices,
+    )
+
     index = models.IntegerField()
 
     comments = models.TextField(blank=True)
@@ -278,6 +291,10 @@ class ResourceAccess(NetBoxModel):
 
     def get_tipo_acesso_color(self):
         return ActionChoicesType.colors.get(self.tipo_acesso)
+    
+    def get_periodo_color(self):
+        return ActionChoicesPeriodo.colors.get(self.periodo)
+    
 
     def get_absolute_url(self):
         return reverse('plugins:netbox_user:pluginuserrule', args=[self.pk])
@@ -367,6 +384,9 @@ class ResourceGroups(NetBoxModel):
 
     def get_absolute_url(self):
         return reverse('plugins:netbox_user:resourcegroups', args=[self.pk])
+    
+    def get_user_access(self, user):
+        return self.user_access.filter(user=user).first()
     
     def save(self, *args, **kwargs):
         # Auto-generate the index if it's not provided

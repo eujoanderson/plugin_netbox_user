@@ -41,7 +41,7 @@ class UserListRuleTable(NetBoxTable):
     )
 
     tags = TagColumn()
-
+    periodo = ChoiceFieldColumn()
     tipo_acesso = tables.Column(verbose_name="Tipo Acesso")
     data_concessao = tables.DateColumn(verbose_name="Data Concessão")
     data_expiracao = tables.DateColumn(verbose_name="Data Expiração")
@@ -61,11 +61,11 @@ class UserListRuleTable(NetBoxTable):
         model = ResourceAccess
         fields = (
             'pk', 'id', 'recurso', 'user','tipo_acesso', 'data_concessao',
-            'data_expiracao', 'aprovador', 'justificativa', 'status','ambiente','tags'
+            'data_expiracao', 'aprovador', 'justificativa','periodo','status','ambiente','tags'
         )
         default_columns = (
             'recurso','user', 'tipo_acesso', 'data_concessao',
-            'data_expiracao', 'aprovador', 'justificativa', 'status','ambiente','tags'
+            'data_expiracao', 'aprovador', 'justificativa','periodo', 'status','ambiente','tags'
         )
 
 

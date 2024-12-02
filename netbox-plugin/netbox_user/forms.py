@@ -18,11 +18,10 @@ class UserListForm(NetBoxModelForm):
 
     groups = forms.ModelMultipleChoiceField(
         queryset=Groups.objects.all(),
-        required=True,
+        required=False,
         widget=forms.SelectMultiple,
         help_text="Adicione o usuário ao grupo",
     )
-
 
     setor = forms.ModelMultipleChoiceField(
         queryset=Sector.objects.all(),
@@ -111,7 +110,7 @@ class UserListRuleForm(NetBoxModelForm):
 
     data_expiracao = forms.DateField(
         widget=DatePicker(attrs={'autocomplete': 'off'}),
-        required=True,
+        required=False,
         label="Data de Expiração"
     )
 
@@ -119,7 +118,7 @@ class UserListRuleForm(NetBoxModelForm):
         model = ResourceAccess
         fields = (
             'user','recurso', 'tipo_acesso', 'data_concessao',
-            'data_expiracao', 'aprovador', 'status','ambiente','recurso','justificativa','comments','tags'
+            'data_expiracao', 'aprovador','periodo', 'status','ambiente','recurso','justificativa','comments','tags'
         )
 
 class UserListRuleFilterForm(NetBoxModelFilterSetForm):

@@ -179,9 +179,9 @@ class GroupView(generic.ObjectView):
         users_table.configure(request)
 
         related_models = [
-            (users, 'users'),
+            (users, 'groups'),
         ]
-
+        
         return {
             'groups': table,
             'related_models': related_models,

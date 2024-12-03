@@ -78,6 +78,8 @@ class ResourceGroupsTable(NetBoxTable):
 
     tags = TagColumn()
     
+    data_concessao = tables.DateColumn(verbose_name="Data de Concensão")
+    
     tipo_acesso = tables.Column(verbose_name="Tipo Acesso")
     aprovador = tables.Column(verbose_name="Aprovador")
     ambiente = tables.ManyToManyColumn(verbose_name="Ambiente")
@@ -91,10 +93,10 @@ class ResourceGroupsTable(NetBoxTable):
     class Meta(NetBoxTable.Meta):
         model = ResourceGroups
         fields = (
-            'pk', 'id', 'recurso','groupslist', 'tipo_acesso', 'aprovador','ambiente','tags'
+            'pk', 'id', 'recurso','groupslist', 'tipo_acesso', 'data_concessao','aprovador','ambiente','tags'
         )
         default_columns = (
-            'recurso', 'groupslist','tipo_acesso', 'aprovador','ambiente','tags'
+            'recurso', 'groupslist','tipo_acesso','data_concessao', 'aprovador','ambiente','tags'
         )
 
 

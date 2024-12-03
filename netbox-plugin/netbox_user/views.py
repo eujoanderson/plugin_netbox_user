@@ -254,6 +254,21 @@ class SectorView(generic.ObjectView):
     queryset = models.Sector.objects.all()
 
 
+    def get_extra_context(self, request, instance):
+        users = instance.users.all() 
+        print(users) 
+        
+        users_table = tables.UserListTable(users)
+        users_table.configure(request)
+
+        related_models = [
+            (users, 'setor'),
+        ]
+        
+        return {
+            'related_models': related_models,
+        }
+
 class SectorListListView(generic.ObjectListView):
     queryset = models.Sector.objects.all()
 

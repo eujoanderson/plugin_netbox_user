@@ -144,7 +144,7 @@ class ActionChoicesType(ChoiceSet):
 
 # Modelo para grupos
 class Groups(NetBoxModel):
-    grupo = models.CharField(max_length=100, unique=True, blank=True)
+    grupo = models.CharField(max_length=100, unique=True, blank=True,)
     comments = models.TextField(blank=True)
 
     clone_fields = (
@@ -171,8 +171,8 @@ class UserList(NetBoxModel):
     groups = models.ManyToManyField(Groups,blank=True, related_name='users')
 
     tags = models.ManyToManyField(Tag, blank=True)
-
-    setor = models.ManyToManyField(Sector, blank=True)
+    
+    setor = models.ManyToManyField(Sector, blank=True, related_name='users')
 
     status_user = models.CharField(
         max_length=30,
@@ -182,11 +182,6 @@ class UserList(NetBoxModel):
     
     clone_fields = (
         'tags','groups', 'setor',
-    )
-
-    prerequisite_models = (
-        'netbox_user.Groups',
-        'netbox_user.Sector',
     )
 
 
@@ -244,7 +239,7 @@ class ResourceAccess(NetBoxModel):
     )
 
     data_concessao = models.DateTimeField()
-    data_expiracao = models.DateTimeField()
+    data_expiracao = models.DateTimeField(blank=True, null=True)
 
     justificativa = models.TextField(blank=True)
 
@@ -333,6 +328,8 @@ class ResourceGroups(NetBoxModel):
         on_delete=models.CASCADE,
         related_name='resource_group_rules'
     )
+    
+    data_concessao = models.DateTimeField(blank=True, null=True)
 
     tipo_acesso = models.CharField(
         choices=ActionChoicesType._choices,
@@ -393,4 +390,4 @@ class ResourceGroups(NetBoxModel):
         if self.index is None:
             last_index = ResourceGroups.objects.filter(groupslist=self.groupslist).aggregate(Max('index'))['index__max']
             self.index = (last_index or 0) + 1  # Start from 1 if no records exist
-        super().save(*args, **kwargs) 
+        super().save(*args, **kwargs)

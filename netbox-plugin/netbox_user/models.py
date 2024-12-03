@@ -393,4 +393,4 @@ class ResourceGroups(NetBoxModel):
         if self.index is None:
             last_index = ResourceGroups.objects.filter(groupslist=self.groupslist).aggregate(Max('index'))['index__max']
             self.index = (last_index or 0) + 1  # Start from 1 if no records exist
-        super().save(*args, **kwargs)
+        super().save(*args, **kwargs) 

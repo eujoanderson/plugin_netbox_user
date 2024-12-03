@@ -3,36 +3,36 @@ from django.db.models import Count
 
 
 from .. import filtersets, models
-from .serializers import UserListSerializer, UserListRuleSerializer, ResourcesListSerializer, EnvironmentListSerializer, GroupsListSerializer, ApproverListSerializer, SectorListSerializer, ResourceGroupsListSerializer
+from .serializers import  UserListSerializer, ResourceAccessSerializer, ResourcesSerializer, EnvironmentSerializer, GroupsSerializer, ApproverSerializer, SectorSerializer, ResourceGroupsSerializer
 
 class ResourcesListViewSet(NetBoxModelViewSet):
     queryset = models.Resources.objects.prefetch_related('tags')
-    serializer_class = ResourcesListSerializer
+    serializer_class = ResourcesSerializer
 
 
 class EnvironmentListViewSet(NetBoxModelViewSet):
     queryset = models.Environment.objects.prefetch_related('tags')
-    serializer_class = EnvironmentListSerializer
+    serializer_class = EnvironmentSerializer
 
 
 class GroupsListViewSet(NetBoxModelViewSet):
     queryset = models.Groups.objects.prefetch_related('tags')
-    serializer_class = GroupsListSerializer
+    serializer_class = GroupsSerializer
 
 
 class ApproverListViewSet(NetBoxModelViewSet):
     queryset = models.Approver.objects.prefetch_related('tags')
-    serializer_class = ApproverListSerializer
+    serializer_class = ApproverSerializer
 
 
 class SectorListViewSet(NetBoxModelViewSet):
     queryset = models.Sector.objects.prefetch_related('tags')
-    serializer_class = SectorListSerializer
+    serializer_class = SectorSerializer
 
 
 class ResourceGroupsListViewSet(NetBoxModelViewSet):
     queryset = models.ResourceGroups.objects.prefetch_related('tags')
-    serializer_class = ResourceGroupsListSerializer
+    serializer_class = ResourceGroupsSerializer
 
 
 
@@ -49,5 +49,5 @@ class UserListRuleViewSet(NetBoxModelViewSet):
     queryset = models.ResourceAccess.objects.prefetch_related(
         'user', 'tags'
     )
-    serializer_class = UserListRuleSerializer
+    serializer_class = ResourceAccessSerializer
     filterset_class = filtersets.UserListRuleFilterSet

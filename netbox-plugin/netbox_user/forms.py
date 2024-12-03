@@ -3,7 +3,7 @@ from utilities.forms.fields import CommentField, ColorField
 from django import forms
 import pdb
 
-from utilities.forms.fields import DynamicModelChoiceField
+from utilities.forms.fields import DynamicModelChoiceField, DynamicModelMultipleChoiceField
 
 from netbox.forms import NetBoxModelForm, NetBoxModelFilterSetForm, NetBoxModelBulkEditForm
 from .models import UserList, ResourceAccess, Resources, Environment,Groups,Approver, Sector, ResourceGroups, Tag
@@ -16,14 +16,13 @@ from django.urls import reverse_lazy
 class UserListForm(NetBoxModelForm):
     comments = CommentField()
 
-    groups = forms.ModelMultipleChoiceField(
+    groups = DynamicModelMultipleChoiceField(
         queryset=Groups.objects.all(),
         required=False,
-        widget=forms.SelectMultiple,
         help_text="Adicione o usuário ao grupo",
     )
 
-    setor = forms.ModelMultipleChoiceField(
+    setor = DynamicModelMultipleChoiceField(
         queryset=Sector.objects.all(),
         required=False,
         help_text="Adicione o usuário ao setor",
@@ -92,13 +91,13 @@ class UserListFilterForm(NetBoxModelFilterSetForm):
 
 class UserListRuleForm(NetBoxModelForm):
 
-    user = forms.ModelChoiceField(queryset=UserList.objects.all(), required=True)
+    user = DynamicModelChoiceField(queryset=UserList.objects.all(), required=True)
 
-    recurso = forms.ModelChoiceField(queryset=Resources.objects.all(), required=True)
+    recurso = DynamicModelChoiceField(queryset=Resources.objects.all(), required=True)
 
-    aprovador = forms.ModelChoiceField(queryset=Approver.objects.all(), required=True)
+    aprovador = DynamicModelChoiceField(queryset=Approver.objects.all(), required=True)
 
-    ambiente = forms.ModelMultipleChoiceField(queryset=Environment.objects.all(), required=True)
+    ambiente = DynamicModelMultipleChoiceField(queryset=Environment.objects.all(), required=True)
 
     comments = CommentField()
 
@@ -175,11 +174,11 @@ class UserListRuleBulkEditForm(NetBoxModelBulkEditForm):
 ## Resouces Groups
 class ResourceGroupsForm(NetBoxModelForm):
 
-    recurso = forms.ModelChoiceField(queryset=Resources.objects.all(), required=True)
-    groupslist = forms.ModelChoiceField(queryset=Groups.objects.all(), required=True)
-    aprovador = forms.ModelChoiceField(queryset=Approver.objects.all(), required=True)
+    recurso = DynamicModelChoiceField(queryset=Resources.objects.all(), required=True)
+    groupslist = DynamicModelChoiceField(queryset=Groups.objects.all(), required=True)
+    aprovador = DynamicModelChoiceField(queryset=Approver.objects.all(), required=True)
 
-    ambiente = forms.ModelMultipleChoiceField(queryset=Environment.objects.all(), required=True)
+    ambiente = DynamicModelMultipleChoiceField(queryset=Environment.objects.all(), required=True)
 
     comments = CommentField()
 

@@ -6,223 +6,87 @@ from netbox.api.serializers import NetBoxModelSerializer, WritableNestedSerializ
 
 
 
-class ResourceAccessSerializer(serializers.ModelSerializer):
-    user = serializers.PrimaryKeyRelatedField(queryset=UserList.objects.all())
-
-    class Meta:
-        model = ResourceAccess
-        fields = (
-            'id', 'user', 'recurso', 'tipo_acesso', 'data_concessao', 'data_expiracao',
-            'aprovador', 'justificativa', 'status', 'ambiente'
-        )
+### //// NESTED
 
 
-### RESOURCES
-class ResourcesSerializer(NetBoxModelSerializer):
-
-    class Meta:
-        model = Resources
-        fields = (
-            'id', 'recurso', 'comments', 'tags'
-        )
-
-class ResourcesListSerializer(NetBoxModelSerializer):
-    url = serializers.HyperlinkedIdentityField(
-            view_name='plugins-api:netbox_user-api:resourceslist-detail' 
-        )
-    
-    class Meta:
-        model = Resources
-        fields = (
-            'id', 'recurso', 'comments', 'tags','url',
-        )
-
-
-class NestedResourcesListSerializer(WritableNestedSerializer):
-    url = serializers.HyperlinkedIdentityField(
-        view_name='plugins-api:netbox_user-api:resourceslist-detail'
-    )
-
-    class Meta:
-        model = Resources
-        fields = ('id', 'recurso', 'comments', 'tags','url')
-### //// RESOURCES
-
-
-
-
-
-
-### ENVIRONMENT
-class EnvironmentSerializer(NetBoxModelSerializer):
-
-    class Meta:
-        model = Environment
-        fields = (
-            'id', 'ambiente', 'comments', 'tags'
-        )
-
-class EnvironmentListSerializer(NetBoxModelSerializer):
-    url = serializers.HyperlinkedIdentityField(
-            view_name='plugins-api:netbox_user-api:environmentlist-detail' 
-        )
-    
-    class Meta:
-        model = Environment
-        fields = (
-            'id', 'ambiente', 'comments', 'tags','url',
-        )
-
-
-class NestedEnvironmentListSerializer(WritableNestedSerializer):
-    url = serializers.HyperlinkedIdentityField(
-        view_name='plugins-api:netbox_user-api:environmentlist-detail'
-    )
-
-    class Meta:
-        model = Environment
-        fields = ('id', 'ambiente', 'comments', 'tags','url')
-### ///// ENVIRONMENT
-
-
-
-### GROUPS
-class GroupsSerializer(NetBoxModelSerializer):
-
-    class Meta:
-        model = Groups
-        fields = (
-            'id', 'grupo', 'comments', 'tags'
-        )
-
-class GroupsListSerializer(NetBoxModelSerializer):
-    url = serializers.HyperlinkedIdentityField(
-            view_name='plugins-api:netbox_user-api:grouplist-detail' 
-        )
-    
-    class Meta:
-        model = Groups
-        fields = (
-            'id', 'grupo', 'comments', 'tags','url',
-        )
-
-
-class NestedGroupsListSerializer(WritableNestedSerializer):
-    url = serializers.HyperlinkedIdentityField(
-        view_name='plugins-api:netbox_user-api:grouplist-detail'
-    )
-
-    class Meta:
-        model = Groups
-        fields = ('id', 'recurso', 'comments', 'tags','url')
-### ///// ENVIRONMENT
-
-
-
-class UserListSerializer(NetBoxModelSerializer):
+class NestedUserListSerializer(WritableNestedSerializer):
     url = serializers.HyperlinkedIdentityField(
         view_name='plugins-api:netbox_user-api:userlist-detail'
     )
-    rule_count = serializers.IntegerField(read_only=True)
 
-    groups = GroupsSerializer(many=True, read_only=True)
-	
     class Meta:
         model = UserList
-        fields = ('id', 'name','groups', 'setor','comments','rule_count', 'url')
+        fields = ('id', 'display','url', 'name','groups', 'setor', 'comments')
 
-
-### Approver
-class ApproverSerializer(NetBoxModelSerializer):
-
-    class Meta:
-        model = Approver
-        fields = (
-            'id', 'aprovador', 'comments', 'tags'
-        )
-
-class ApproverListSerializer(NetBoxModelSerializer):
+class NestedResourceAccessSerializer(WritableNestedSerializer):
     url = serializers.HyperlinkedIdentityField(
-            view_name='plugins-api:netbox_user-api:approverlist-detail' 
-        )
-    
-    class Meta:
-        model = Approver
-        fields = (
-            'id', 'aprovador', 'comments', 'tags','url',
-        )
-
-
-class NestedApproverListSerializer(WritableNestedSerializer):
-    url = serializers.HyperlinkedIdentityField(
-        view_name='plugins-api:netbox_user-api:approverlist-detail'
+        view_name='plugins-api:netbox_user-api:pluginuserrule-detail'
     )
 
     class Meta:
-        model = Approver
-        fields = ('id', 'aprovador', 'comments', 'tags','url')
-### ///// Approver
+        model = ResourceAccess
+        fields = ('id', 'display','user','index', 'recurso', 'tipo_acesso', 'data_concessao',
+                  'data_expiracao', 'aprovador', 'justificativa', 'status', 'ambiente','url', 'comments')
 
 
-
-
-### Sector
-class SectorSerializer(NetBoxModelSerializer):
+class NestedResourcesSerializer(WritableNestedSerializer):
+    url = serializers.HyperlinkedIdentityField(
+        view_name='plugins-api:netbox_user-api:resources-detail'
+    )
 
     class Meta:
-        model = Sector
-        fields = (
-            'id', 'setor', 'comments', 'tags'
-        )
+        model = Resources
+        fields = ('id', 'grupo','display','url',)
 
-class SectorListSerializer(NetBoxModelSerializer):
+
+class NestedSectorSerializer(WritableNestedSerializer):
     url = serializers.HyperlinkedIdentityField(
-            view_name='plugins-api:netbox_user-api:sectorlist-detail' 
-        )
-    
-    class Meta:
-        model = Sector
-        fields = (
-            'id', 'setor', 'comments', 'tags','url',
-        )
-
-
-class NestedSectorListSerializer(WritableNestedSerializer):
-    url = serializers.HyperlinkedIdentityField(
-        view_name='plugins-api:netbox_user-api:sectorlist-detail'
+        view_name='plugins-api:netbox_user-api:sector-detail'
     )
 
     class Meta:
         model = Sector
-        fields = ('id', 'setor', 'comments', 'tags','url')
-### ///// Sector
+        fields = ('id','setor','display', 'comments', 'url')
 
 
-
-
-
-
-### Resource Groups
-class ResourceGroupsSerializer(NetBoxModelSerializer):
-
-    class Meta:
-        model = ResourceGroups
-        fields = (
-            'id', 'recurso','groupslist', 'tipo_acesso', 'aprovador', 'ambiente','comments'
-        )
-
-class ResourceGroupsListSerializer(NetBoxModelSerializer):
+class NestedApproverSerializer(WritableNestedSerializer):
     url = serializers.HyperlinkedIdentityField(
-            view_name='plugins-api:netbox_user-api:resourcegroups-detail' 
-        )
-    
-    
-    class Meta:
-        model = ResourceGroups
-        fields = (
-            'id', 'recurso','groupslist', 'tipo_acesso', 'aprovador','ambiente','comments', 'url'
-        )
+        view_name='plugins-api:netbox_user-api:approver-detail'
+    )
 
+    class Meta:
+        model = Approver
+        fields = ('id', 'display','aprovador', 'comments', 'url')
+
+
+class NestedGroupsSerializer(WritableNestedSerializer):
+    url = serializers.HyperlinkedIdentityField(
+        view_name='plugins-api:netbox_user-api:groups-detail'
+    )
+
+    class Meta:
+        model = Groups
+        fields = ('id', 'grupo','display','comments','url')
+
+
+class NestedEnvironmentSerializer(WritableNestedSerializer):
+    url = serializers.HyperlinkedIdentityField(
+        view_name='plugins-api:netbox_user-api:environment-detail'
+    )
+
+    class Meta:
+        model = Environment
+        fields = ('id', 'display','ambiente', 'comments', 'url')
+
+
+class NestedResourcesSerializer(WritableNestedSerializer):
+    url = serializers.HyperlinkedIdentityField(
+        view_name='plugins-api:netbox_user-api:resources-detail'
+    )
+
+    class Meta:
+        model = Resources
+        fields = ('id', 'display','recurso', 'comments','url')
 
 class NestedResourceGroupsListSerializer(WritableNestedSerializer):
     url = serializers.HyperlinkedIdentityField(
@@ -232,36 +96,145 @@ class NestedResourceGroupsListSerializer(WritableNestedSerializer):
     class Meta:
         model = ResourceGroups
         fields = ('id', 'recurso','groupslist', 'tipo_acesso', 'aprovador', 'ambiente','comments','url')
-### ///// Sector
+### //// Nested
 
 
-class NestedAccessListSerializer(WritableNestedSerializer):
+
+
+
+### ENVIRONMENT
+class EnvironmentSerializer(NetBoxModelSerializer):
+    url = serializers.HyperlinkedIdentityField(
+            view_name='plugins-api:netbox_user-api:environment-detail' 
+        )
+    
+    class Meta:
+        model = Environment
+        fields = (
+            'id', 'ambiente', 'comments', 'tags','url',
+        )
+### ///// ENVIRONMENT
+
+
+
+### GROUPS
+class GroupsSerializer(NetBoxModelSerializer):
+    url = serializers.HyperlinkedIdentityField(
+            view_name='plugins-api:netbox_user-api:groups-detail' 
+        )
+    
+    class Meta:
+        model = Groups
+        fields = (
+            'id', 'grupo', 'comments', 'tags','url',
+        )
+
+### ///// GROUPS
+
+
+
+class UserListSerializer(NetBoxModelSerializer):
     url = serializers.HyperlinkedIdentityField(
         view_name='plugins-api:netbox_user-api:userlist-detail'
     )
+    rule_count = serializers.IntegerField(read_only=True)
 
+    groups = NestedGroupsSerializer(many=True)
+    setor = NestedSectorSerializer(many=True)
+	
     class Meta:
         model = UserList
-        fields = ('id', 'url', 'name')
+        fields = ('id', 'name','groups', 'setor','comments','rule_count','tags','url')
 
-class NestedAccessListRuleSerializer(WritableNestedSerializer):
+
+### Approver
+
+class ApproverSerializer(NetBoxModelSerializer):
     url = serializers.HyperlinkedIdentityField(
-        view_name='plugins-api:netbox_user-api:pluginuserrule-detail'
-    )
-
+            view_name='plugins-api:netbox_user-api:approver-detail' 
+        )
+    
     class Meta:
-        model = ResourceAccess
-        fields = ('id', 'url', 'index')
+        model = Approver
+        fields = (
+            'id', 'aprovador', 'comments', 'tags','url',
+        )
+
+### ///// Approver
+
+
+
+
+### Sector
+
+class SectorSerializer(NetBoxModelSerializer):
+    url = serializers.HyperlinkedIdentityField(
+            view_name='plugins-api:netbox_user-api:sector-detail' 
+        )
+    
+    class Meta:
+        model = Sector
+        fields = (
+            'id', 'comments', 'tags','url',
+        )
+
+### ///// Sector
+
+
+
+
+
+
+### Resource Groups
+class ResourceGroupsSerializer(NetBoxModelSerializer):
+    url = serializers.HyperlinkedIdentityField(
+            view_name='plugins-api:netbox_user-api:resourcegroups-detail' 
+        )
+    
+    recurso = NestedResourcesSerializer()
+    groupslist = NestedGroupsSerializer()
+    aprovador = NestedApproverSerializer()
+    ambiente = NestedEnvironmentSerializer(many=True)
+    
+    
+    class Meta:
+        model = ResourceGroups
+        fields = (
+            'id', 'recurso','groupslist', 'tipo_acesso', 'aprovador','ambiente','comments', 'url'
+        )
+
+### ///// Sector
+
         
 
-class UserListRuleSerializer(NetBoxModelSerializer):
+class ResourceAccessSerializer(NetBoxModelSerializer):
 
     url = serializers.HyperlinkedIdentityField(
-        view_name='plugins-api:netbox_user-api:pluginuserrule-detail'
+        view_name='plugins-api:netbox_user-api:resourceaccess-detail'
     )
+
+    user = NestedUserListSerializer()
+    recurso = NestedResourcesSerializer()
+    aprovador = NestedApproverSerializer()
+    ambiente = NestedEnvironmentSerializer(many=True)
 
     class Meta:
         model = ResourceAccess
         fields = ('id', 'user','index', 'recurso', 'tipo_acesso', 'data_concessao',
                   'data_expiracao', 'aprovador', 'justificativa', 'status', 'ambiente', 'url')
+        
+
+
+
+### RESOURCES
+class ResourcesSerializer(NetBoxModelSerializer):
+    url = serializers.HyperlinkedIdentityField(
+            view_name='plugins-api:netbox_user-api:resources-detail' 
+        )
+
+    class Meta:
+        model = Resources
+        fields = (
+            'id', 'recurso', 'comments', 'tags','url',
+        )
         

@@ -40,7 +40,7 @@ class UserListBulkEditForm(NetBoxModelBulkEditForm):
         help_text="Adicione o usuário ao grupo",
     )
 
-    setor = forms.ModelMultipleChoiceField(
+    setor = DynamicModelChoiceField(
         queryset=Sector.objects.all(),
         required=False,
         help_text="Adicione o usuário ao setor",
@@ -179,13 +179,19 @@ class ResourceGroupsForm(NetBoxModelForm):
     aprovador = DynamicModelChoiceField(queryset=Approver.objects.all(), required=True)
 
     ambiente = DynamicModelMultipleChoiceField(queryset=Environment.objects.all(), required=True)
+    
+    data_concessao = forms.DateField(
+        widget=DatePicker(attrs={'autocomplete': 'off'}),
+        required=False,
+        label="Data de Concessão"
+    )
 
     comments = CommentField()
 
     class Meta:
         model = ResourceGroups
         fields = (
-            'recurso', 'groupslist','tipo_acesso', 'aprovador', 'ambiente','comments','tags'
+            'recurso', 'groupslist','tipo_acesso','data_concessao','aprovador', 'ambiente','comments','tags'
         )
 
 class ResourceGroupsFilterForm(NetBoxModelFilterSetForm):
@@ -376,9 +382,6 @@ class SectorFormFilterForm(NetBoxModelFilterSetForm):
 class SectorBulkEditForm(NetBoxModelBulkEditForm):    
 
     model = Sector
-
-
-
 
 
 ## Resouces 

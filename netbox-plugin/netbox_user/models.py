@@ -313,6 +313,17 @@ class ResourceAccess(NetBoxModel):
                 raise ValidationError({
                     'data_concessao': 'A data de concessão não pode ser maior que a data de expiração.'
                 })
+        if not self.data_expiracao:  
+            if self.periodo != 'permanente': 
+                raise ValidationError({
+                    'periodo': 'Quando a data de expiração está vazia, o período deve ser permanente.'
+                })
+        else:  
+            if self.periodo != 'temporario':
+                raise ValidationError({
+                    'periodo': 'Quando a data de expiração é preenchida, o período deve ser temporário.'
+                })
+
         super().clean()
 
     
@@ -320,7 +331,7 @@ class ResourceAccess(NetBoxModel):
 @receiver(pre_save, sender=ResourceAccess)
 def update_resource_status(sender, instance, **kwargs):
     today = timezone.now().date()
-    if instance.data_expiracao < today:
+    if instance.data_expiracao and instance.data_expiracao <= today:
         instance.status = 'expired'
     else:
         instance.status = 'active'

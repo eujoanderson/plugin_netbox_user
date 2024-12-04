@@ -6,6 +6,10 @@ from django.urls import reverse # type: ignore
 from django.db.models import Max
 from extras.models import Tag
 from django.core.exceptions import ValidationError
+from django.utils import timezone
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
+
 
 
 class Resources(NetBoxModel):
@@ -238,8 +242,8 @@ class ResourceAccess(NetBoxModel):
         blank=True
     )
 
-    data_concessao = models.DateTimeField()
-    data_expiracao = models.DateTimeField(blank=True, null=True)
+    data_concessao = models.DateField()
+    data_expiracao = models.DateField(blank=True, null=True)
 
     justificativa = models.TextField(blank=True)
 
@@ -255,6 +259,7 @@ class ResourceAccess(NetBoxModel):
         related_name='rules',
         blank=True
     )
+    
 
     ambiente = models.ManyToManyField(Environment, blank=True)
 
@@ -312,6 +317,13 @@ class ResourceAccess(NetBoxModel):
 
     
 
+@receiver(pre_save, sender=ResourceAccess)
+def update_resource_status(sender, instance, **kwargs):
+    today = timezone.now().date()
+    if instance.data_expiracao < today:
+        instance.status = 'expired'
+    else:
+        instance.status = 'active'
 
 
 class ResourceGroups(NetBoxModel):
@@ -391,3 +403,13 @@ class ResourceGroups(NetBoxModel):
             last_index = ResourceGroups.objects.filter(groupslist=self.groupslist).aggregate(Max('index'))['index__max']
             self.index = (last_index or 0) + 1  # Start from 1 if no records exist
         super().save(*args, **kwargs)
+        
+        
+class UserGroupResource(models.Model):
+    user = models.ForeignKey(UserList, on_delete=models.CASCADE, related_name='group_resources')
+    group = models.ForeignKey(Groups, on_delete=models.CASCADE)
+    recurso = models.ForeignKey(Resources, on_delete=models.CASCADE)
+    data_concessao = models.DateTimeField()  # Data de concessão específica para o recurso do grupo para este usuário
+    
+    class Meta:
+        unique_together = ('user', 'group', 'recurso')  # Garantir que não haja duplicatas

@@ -117,7 +117,7 @@ class UserListRuleForm(NetBoxModelForm):
         model = ResourceAccess
         fields = (
             'user','recurso', 'tipo_acesso', 'data_concessao',
-            'data_expiracao', 'aprovador','periodo', 'status','ambiente','recurso','justificativa','comments','tags'
+            'data_expiracao', 'aprovador','periodo','ambiente','recurso','justificativa','comments','tags'
         )
 
 class UserListRuleFilterForm(NetBoxModelFilterSetForm):
@@ -416,3 +416,4 @@ class ResourcesFormFilterForm(NetBoxModelFilterSetForm):
         fields = (
             'recurso',  'comments', 'tags'
         )
+        

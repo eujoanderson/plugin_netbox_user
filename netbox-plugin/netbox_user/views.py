@@ -3,6 +3,11 @@ from . import forms, models, tables
 from django.db.models import Count
 from . import filtersets, forms, models, tables
 from django_tables2 import RequestConfig
+from django.shortcuts import render, redirect
+from .forms import UserListForm
+from django.utils import timezone
+from .models import ResourceAccess
+
 
 # USER LIST
 class UserListView(generic.ObjectView):
@@ -63,10 +68,22 @@ class UserListBulkDeleteView(generic.BulkDeleteView):
 # RESOURCES RULE LIST
 class UserListRuleView(generic.ObjectView):
     queryset = models.ResourceAccess.objects.all()
+    
+
+    
+    
 
 class UserListRuleListView(generic.ObjectListView):
     queryset = models.ResourceAccess.objects.all()
     table = tables.UserListRuleTable
+    
+    def get_queryset(self, request):
+        today = timezone.now().date()
+        
+        ResourceAccess.objects.filter(data_expiracao__lte=today).update(status='expired')
+        ResourceAccess.objects.filter(data_expiracao__gt=today).update(status='active')
+        
+        return ResourceAccess.objects.all()
 
     filterset = filtersets.UserListRuleFilterSet
     filterset_form = forms.UserListRuleFilterForm

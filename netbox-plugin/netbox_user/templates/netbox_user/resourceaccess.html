@@ -32,17 +32,21 @@
             </tr>
             <tr>
               <th scope="row">Data Concessão</th>
-              <td>{{ object.data_concessao.date|date:"d/m/Y" }}</td>
+              <td>{{ object.data_concessao|date:"d/m/Y" }}</td>
             </tr>
             <tr>
               <th scope="row">Data Expiração</th>
-              <td>{{ object.data_expiracao.date|date:"d/m/Y" }}</td>
+              <td>{{ object.data_expiracao|date:"d/m/Y" }}</td>
             </tr>
             <tr>
               <th scope="row">Aprovador</th>
               <td>
                 {{ object.aprovador }}
               </td>
+            </tr>
+            <tr>
+              <th scope="row">Periodo</th>
+              <td>{{ object.periodo|capfirst }}</td>
             </tr>
             <tr>
               <th scope="row">Status</th>

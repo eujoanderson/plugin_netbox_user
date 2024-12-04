@@ -326,17 +326,6 @@ class ResourceAccess(NetBoxModel):
 
         super().clean()
 
-    
-
-@receiver(pre_save, sender=ResourceAccess)
-def update_resource_status(sender, instance, **kwargs):
-    today = timezone.now().date()
-    if instance.data_expiracao and instance.data_expiracao <= today:
-        instance.status = 'expired'
-    else:
-        instance.status = 'active'
-
-
 class ResourceGroups(NetBoxModel):
     index = models.IntegerField()
 

@@ -172,7 +172,7 @@ class UserList(NetBoxModel):
     name = models.CharField(max_length=100,unique=True)
     comments = models.TextField(blank=True)
 
-    groups = models.ManyToManyField(Groups,blank=True, related_name='users')
+    groups = models.ManyToManyField(Groups,blank=True, related_name='users', through='UserGroupAssociation')
 
     tags = models.ManyToManyField(Tag, blank=True)
     
@@ -214,6 +214,13 @@ class UserList(NetBoxModel):
     def save(self, *args, **kwargs):
         # Salva o usuário normalmente
         super().save(*args, **kwargs)
+        
+    def get_group_association_date(self, group):
+        try:
+            association = self.group_associations.get(group=group)
+            return association.data_associacao
+        except UserGroupAssociation.DoesNotExist:
+            return None  
 
 
 
@@ -259,7 +266,6 @@ class ResourceAccess(NetBoxModel):
         related_name='rules',
         blank=True
     )
-    
 
     ambiente = models.ManyToManyField(Environment, blank=True)
 
@@ -300,14 +306,14 @@ class ResourceAccess(NetBoxModel):
         return reverse('plugins:netbox_user:pluginuserrule', args=[self.pk])
     
     def save(self, *args, **kwargs):
-        # Auto-generate the index if it's not provided
+    
         if self.index is None:
             last_index = ResourceAccess.objects.filter(user=self.user).aggregate(Max('index'))['index__max']
-            self.index = (last_index or 0) + 1  # Start from 1 if no records exist
+            self.index = (last_index or 0) + 1  
         super().save(*args, **kwargs)
 
     def clean(self):
-        # Verifica se a data de concessão é maior que a data de expiração
+        
         if self.data_concessao and self.data_expiracao:
             if self.data_concessao > self.data_expiracao:
                 raise ValidationError({
@@ -405,11 +411,13 @@ class ResourceGroups(NetBoxModel):
         super().save(*args, **kwargs)
         
         
-class UserGroupResource(models.Model):
-    user = models.ForeignKey(UserList, on_delete=models.CASCADE, related_name='group_resources')
-    group = models.ForeignKey(Groups, on_delete=models.CASCADE)
-    recurso = models.ForeignKey(Resources, on_delete=models.CASCADE)
-    data_concessao = models.DateTimeField()  # Data de concessão específica para o recurso do grupo para este usuário
+class UserGroupAssociation(models.Model):
+    user = models.ForeignKey(UserList, on_delete=models.CASCADE, related_name='group_associations')
+    group = models.ForeignKey(Groups, on_delete=models.CASCADE, related_name='user_associations')
+    data_associacao = models.DateField(auto_now_add=True)  
     
     class Meta:
-        unique_together = ('user', 'group', 'recurso')  # Garantir que não haja duplicatas
+        unique_together = ('user', 'group') 
+        
+    def __str__(self):
+        return f"{self.user.name} - {self.group.grupo} ({self.data_associacao})"

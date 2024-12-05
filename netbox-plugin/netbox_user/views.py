@@ -19,6 +19,8 @@ class UserListView(generic.ObjectView):
 
         table2 = tables.GroupTable(instance.groups.all())
         table2.configure(request)
+        
+        
 
         resource_groups_list = []
         for grupo in instance.groups.all():
@@ -29,10 +31,13 @@ class UserListView(generic.ObjectView):
 
         resource_groups_table = tables.ResourceGroupsTable(resource_groups_list)
         resource_groups_table.configure(request)
+        
+        user_group_associations = instance.group_associations.select_related('group')
 
         return {
             'recurso': table,
             'recurso_grupo': resource_groups_table,
+            'user_group_associations': user_group_associations,
         } 
 
 class UserListListView(generic.ObjectListView):

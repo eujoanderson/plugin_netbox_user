@@ -64,6 +64,9 @@
 </div>
 
 
+
+
+
 {% if object.groups.exists %}
 <div class="row">
   <div class="col pt-4 col-md-12">
@@ -75,6 +78,33 @@
     </div>
   </div>
 </div>
+{% endif %}
+
+
+{% if user_group_associations %}
+  <div class="card p-2 mt-4">
+    <h5 class="card-header">Associações do Usuário com Grupos</h5>
+    <div class="card-body">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Grupo</th>
+            <th>Data de Associação</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for association in user_group_associations %}
+            <tr>
+              <td>
+                <a href="{{ association.group.get_absolute_url }}">{{ association.group }}</a>
+              </td>
+              <td>{{ association.data_associacao|date:"d/m/Y" }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
 {% endif %}
 
 

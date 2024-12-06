@@ -45,9 +45,10 @@
         </div>
       </div>
       {% include 'inc/panels/custom_fields.html' %}
+      {% include 'inc/panels/tags.html' %}
     </div>
     <div class="col col-md-6">
-      {% include 'inc/panels/tags.html' %}
+
       {% include 'inc/panels/comments.html' %}
 
       {% if user_group_associations %}
@@ -90,10 +91,6 @@
   </div>
 </div>
 
-
-
-
-
 {% if object.groups.exists %}
 <div class="row">
   <div class="col pt-4 col-md-12">
@@ -106,9 +103,5 @@
   </div>
 </div>
 {% endif %}
-
-
-
-
 
 {% endblock content %}

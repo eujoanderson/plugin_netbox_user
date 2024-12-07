@@ -151,24 +151,21 @@ class UserListRuleFilterForm(NetBoxModelFilterSetForm):
             'data_expiracao', 'aprovador', 'status','ambiente','recurso','justificativa','tags',]  
 
 class UserListRuleBulkEditForm(NetBoxModelBulkEditForm):
-    user = forms.ModelChoiceField(queryset=UserList.objects.all(), required=False)
-    recurso = forms.ModelChoiceField(queryset=Resources.objects.all(), required=False)
-    tags =  forms.ModelChoiceField(queryset=Tag.objects.all(), required=False)
     aprovador = forms.ModelChoiceField(queryset=Approver.objects.all(), required=False)
     ambiente = forms.ModelMultipleChoiceField(queryset=Environment.objects.all(), required=False)
-    data_concessao = forms.DateField(widget=DatePicker(attrs={'autocomplete': 'off'}), required=False)
-    data_expiracao = forms.DateField(widget=DatePicker(attrs={'autocomplete': 'off'}), required=False)
-    
-    # Adicionando campos obrigatórios como opcionais no formulário
-    action = forms.CharField(max_length=30, required=False)
-    tipo_acesso = forms.ChoiceField( required=False)
-    status = forms.ChoiceField( required=False)
 
     model = ResourceAccess
 
     fieldsets = (
         ('Informações', ('aprovador', 'ambiente', )), 
     )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        for field in self.fields:
+            if self.cleaned_data.get(field) in [None, '']:
+                print(f"Campo vazio: {field}")  # Saída de depuração
+        return cleaned_data
 
 
 ## Resouces Groups

@@ -78,7 +78,7 @@ class ResourceGroupsTable(NetBoxTable):
 
     tags = TagColumn()
     
-    data_concessao = tables.Column(verbose_name="Data de Concensão")
+    data_concessao = tables.DateColumn(verbose_name="Data de Concensão")
     
     tipo_acesso = tables.Column(verbose_name="Tipo Acesso")
     aprovador = tables.Column(verbose_name="Aprovador")

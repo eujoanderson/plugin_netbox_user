@@ -346,8 +346,6 @@ class ResourceGroups(NetBoxModel):
         on_delete=models.CASCADE,
         related_name='resource_group_rules'
     )
-    
-    data_concessao = models.DateTimeField(blank=True, null=True)
 
     tipo_acesso = models.CharField(
         choices=ActionChoicesType._choices,

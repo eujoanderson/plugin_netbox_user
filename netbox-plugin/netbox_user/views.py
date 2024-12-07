@@ -115,10 +115,6 @@ class UserListRuleBulkDeleteView(generic.BulkDeleteView):
 
 
 
-
-
-
-
 # RESOURCES LIST
 class ResourcesView(generic.ObjectView):
     queryset = models.Resources.objects.all()

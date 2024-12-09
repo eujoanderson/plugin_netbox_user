@@ -85,8 +85,9 @@ class UserListRuleListView(generic.ObjectListView):
     def get_queryset(self, request):
         today = timezone.now().date()
         
-        ResourceAccess.objects.filter(data_expiracao__lt=today).update(status='expired')
-        ResourceAccess.objects.filter(data_expiracao__gte=today).update(status='active')
+        ResourceAccess.objects.filter(data_expiracao__lt=today).update(status='expired')  
+        ResourceAccess.objects.filter(data_expiracao__gte=today).update(status='active')     
+
         
         return ResourceAccess.objects.all()
 

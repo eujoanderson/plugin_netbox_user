@@ -228,7 +228,8 @@ class ResourceAccess(NetBoxModel):
     user = models.ForeignKey(
         to=UserList,
         on_delete=models.CASCADE,
-        related_name='rules'
+        related_name='rules',
+        blank=True
     )
 
     periodo = models.CharField(
@@ -241,7 +242,8 @@ class ResourceAccess(NetBoxModel):
     comments = models.TextField(blank=True)
 
     action = models.CharField(
-        max_length=30
+        max_length=30,
+        blank=True
     )
 
     tipo_acesso = models.CharField(
@@ -249,7 +251,7 @@ class ResourceAccess(NetBoxModel):
         blank=True
     )
 
-    data_concessao = models.DateField()
+    data_concessao = models.DateField(blank=True)
     data_expiracao = models.DateField(blank=True, null=True)
 
     justificativa = models.TextField(blank=True)
@@ -257,7 +259,8 @@ class ResourceAccess(NetBoxModel):
     recurso = models.ForeignKey(
         to=Resources,
         on_delete=models.CASCADE,
-        related_name='rules'
+        related_name='rules',
+        blank=True
     )
 
     aprovador = models.ForeignKey(
@@ -272,6 +275,7 @@ class ResourceAccess(NetBoxModel):
     status = models.CharField(
         max_length=30,
         choices=ActionChoices._choices,
+        blank=True
     )
 
     clone_fields = (
@@ -306,7 +310,7 @@ class ResourceAccess(NetBoxModel):
         return reverse('plugins:netbox_user:pluginuserrule', args=[self.pk])
     
     def save(self, *args, **kwargs):
-    
+        print(f"Salvando ResourceAccess com dados: {self.__dict__}")
         if self.index is None:
             last_index = ResourceAccess.objects.filter(user=self.user).aggregate(Max('index'))['index__max']
             self.index = (last_index or 0) + 1  

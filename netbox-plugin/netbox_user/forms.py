@@ -151,21 +151,13 @@ class UserListRuleFilterForm(NetBoxModelFilterSetForm):
             'data_expiracao', 'aprovador', 'status','ambiente','recurso','justificativa','tags',]  
 
 class UserListRuleBulkEditForm(NetBoxModelBulkEditForm):
-    aprovador = forms.ModelChoiceField(queryset=Approver.objects.all(), required=False)
-    ambiente = forms.ModelMultipleChoiceField(queryset=Environment.objects.all(), required=False)
-
     model = ResourceAccess
+    aprovador = DynamicModelChoiceField(queryset=Approver.objects.all(), required=False)
+    ambiente = DynamicModelMultipleChoiceField(queryset=Environment.objects.all(), required=False)
 
     fieldsets = (
         ('Informações', ('aprovador', 'ambiente', )), 
     )
-
-    def clean(self):
-        cleaned_data = super().clean()
-        for field in self.fields:
-            if self.cleaned_data.get(field) in [None, '']:
-                print(f"Campo vazio: {field}")  # Saída de depuração
-        return cleaned_data
 
 
 ## Resouces Groups
@@ -190,6 +182,8 @@ class ResourceGroupsForm(NetBoxModelForm):
         fields = (
             'recurso', 'groupslist','tipo_acesso','data_concessao','aprovador', 'ambiente','comments','tags'
         )
+
+    
 
 class ResourceGroupsFilterForm(NetBoxModelFilterSetForm):
     model = ResourceGroups
@@ -223,6 +217,18 @@ class ResourceGroupsBulkEditForm(NetBoxModelBulkEditForm):
     fieldsets = (
         ('Informações', ('groupslist', 'aprovador', 'ambiente')), 
     )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        print("Dados limpos:", cleaned_data)
+
+        for field_name, field in self.fields.items():
+            print(f"Campo: {field_name}, Valor: {cleaned_data.get(field_name)}")
+            if field.required and cleaned_data.get(field_name) is None:
+                print(f"Erro no campo obrigatório: {field_name}")
+                self.add_error(field_name, "Este campo não pode estar vazio.")
+
+        return cleaned_data
 
 
 ### Resourcer

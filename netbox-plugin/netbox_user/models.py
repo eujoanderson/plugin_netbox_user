@@ -164,6 +164,11 @@ class Groups(NetBoxModel):
 
     def get_absolute_url(self):
         return reverse('plugins:netbox_user:groupslist', args=[self.pk])
+    
+    def clone(self):
+        attrs = super().clone()
+        attrs['extra-value'] = 123
+        return attrs
 
 
 
@@ -185,7 +190,7 @@ class UserList(NetBoxModel):
     )
     
     clone_fields = (
-        'tags','groups', 'setor',
+        'tags','status_user', 'setor',
     )
 
 
@@ -220,7 +225,12 @@ class UserList(NetBoxModel):
             association = self.group_associations.get(group=group)
             return association.data_associacao
         except UserGroupAssociation.DoesNotExist:
-            return None  
+            return None
+        
+    def clone(self):
+        attrs = super().clone()
+        attrs['extra-value'] = 123
+        return attrs
 
 
 
@@ -423,7 +433,6 @@ class UserGroupAssociation(models.Model):
         
     def __str__(self):
         return f"{self.user.name} - {self.group.grupo} ({self.data_associacao})"
-
 
 
 

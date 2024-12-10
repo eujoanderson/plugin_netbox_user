@@ -41,7 +41,7 @@ class UserListBulkEditForm(NetBoxModelBulkEditForm):
         help_text="Adicione o usuário ao grupo",
     )
 
-    setor = DynamicModelChoiceField(
+    setor = DynamicModelMultipleChoiceField(
         queryset=Sector.objects.all(),
         required=False,
         help_text="Adicione o usuário ao setor",

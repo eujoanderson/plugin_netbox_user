@@ -35,7 +35,7 @@ class UserListView(generic.ObjectView):
         resource_groups_table = tables.ResourceGroupsTable(resource_groups_list)
         resource_groups_table.configure(request)
         
-        user_group_associations = instance.group_associations.select_related('group')
+        user_group_associations = instance.group_associations.select_related('group').order_by('-data_associacao')
 
         return {
             'recurso': table,

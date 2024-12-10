@@ -30,6 +30,7 @@ class UserListTable(NetBoxTable):
         fields = ('pk', 'id', 'name', 'groups', 'comments', 'status_user','setor','rules_count','tags',)
         default_columns = ('name', 'groups','status_user','setor', 'rules_count','tags', )
 
+
 class UserListRuleTable(NetBoxTable):
 
     user = tables.Column(
@@ -66,6 +67,8 @@ class UserListRuleTable(NetBoxTable):
             'recurso','user', 'tipo_acesso', 'data_concessao',
             'data_expiracao', 'aprovador', 'justificativa','periodo', 'status','ambiente','tags'
         )
+
+
 
 class ResourceGroupsTable(NetBoxTable):
     groupslist = tables.Column(
@@ -107,6 +110,8 @@ class ResourcesTable(NetBoxTable):
         fields = ('pk', 'id', 'recurso',  'comments', 'tags')
         default_columns = ('recurso',  'comments', 'tags' )
 
+
+
 class EnvironmentTable(NetBoxTable):
     ambiente = tables.Column(
         linkify=True
@@ -136,6 +141,8 @@ class GroupTable(NetBoxTable):
         model = Groups
         fields = ('pk', 'id', 'grupo', 'rules_count', 'comments', 'tags')
         default_columns = ('grupo',  'rules_count','comments', 'tags' )
+
+
 
 class ApproverTable(NetBoxTable):
     aprovador = tables.Column(

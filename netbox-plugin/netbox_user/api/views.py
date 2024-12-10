@@ -8,6 +8,7 @@ from .serializers import  UserListSerializer, ResourceAccessSerializer, Resource
 class ResourcesListViewSet(NetBoxModelViewSet):
     queryset = models.Resources.objects.prefetch_related('tags')
     serializer_class = ResourcesSerializer
+    filterset_class = filtersets.ResourcesFilter
 
 
 class EnvironmentListViewSet(NetBoxModelViewSet):

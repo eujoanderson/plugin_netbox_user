@@ -13,15 +13,18 @@ from .models import ResourceAccess
 class UserListView(generic.ObjectView):
     queryset = models.UserList.objects.all()
 
+    
+
     def get_extra_context(self, request, instance):
+
+        update_resource_access_status() 
+
         table = tables.UserListRuleTable(instance.rules.all())
         table.configure(request)
 
         table2 = tables.GroupTable(instance.groups.all())
         table2.configure(request)
         
-        
-
         resource_groups_list = []
         for grupo in instance.groups.all():
 
@@ -83,12 +86,7 @@ class UserListRuleListView(generic.ObjectListView):
     table = tables.UserListRuleTable
     
     def get_queryset(self, request):
-        today = timezone.now().date()
-        
-        ResourceAccess.objects.filter(data_expiracao__lt=today).update(status='expired')  
-        ResourceAccess.objects.filter(data_expiracao__gte=today).update(status='active')     
-
-        
+        update_resource_access_status() 
         return ResourceAccess.objects.all()
 
     filterset = filtersets.UserListRuleFilterSet
@@ -350,3 +348,11 @@ class ResourceGroupsBulkDeleteView(generic.BulkDeleteView):
     
     table = tables.ResourceGroupsTable
     filterset = filtersets.ResourceGroupsFilterSet
+
+
+
+
+def update_resource_access_status():
+    today = timezone.now().date()
+    ResourceAccess.objects.filter(data_expiracao__lt=today).update(status='expired')
+    ResourceAccess.objects.filter(data_expiracao__gte=today).update(status='active')

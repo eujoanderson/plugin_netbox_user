@@ -44,11 +44,12 @@
           </table>
         </div>
       </div>
+      {% include 'inc/panels/comments.html' %}
       {% include 'inc/panels/custom_fields.html' %}
     </div>
     <div class="col col-md-6">
       {% include 'inc/panels/tags.html' %}
-      {% include 'inc/panels/comments.html' %}
+
 
       {% if user_group_associations %}
       <div class="col-md-12 card p-2 mt-4">

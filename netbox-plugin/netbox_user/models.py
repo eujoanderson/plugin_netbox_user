@@ -423,3 +423,8 @@ class UserGroupAssociation(models.Model):
         
     def __str__(self):
         return f"{self.user.name} - {self.group.grupo} ({self.data_associacao})"
+
+
+
+
+

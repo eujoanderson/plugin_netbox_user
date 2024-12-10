@@ -129,6 +129,7 @@ class ResourcesFilterSet(NetBoxModelFilterSet):
         required=False,
         label="Selecione as tags"
     )
+    
     class Meta:
         model = Resources
         fields = ('id', 'recurso',  'comments', )
@@ -163,3 +164,21 @@ class ResourceGroupsFilterSet(NetBoxModelFilterSet):
         return queryset.filter(
             Q(recurso__recurso__icontains=value) | Q(groupslist__grupo__icontains=value) | Q(ambiente__ambiente__icontains=value)
         )
+    
+
+
+class ResourcesFilter(django_filters.FilterSet):
+    exclude_assigned = django_filters.BooleanFilter(
+        method='filter_exclude_assigned',
+        label="Excluir recursos atribuídos"
+    )
+
+    class Meta:
+        model = Resources
+        fields = ['exclude_assigned']
+
+    def filter_exclude_assigned(self, queryset, name, value):
+        if value:
+            assigned_resources = ResourceGroups.objects.values_list('recurso', flat=True)
+            return queryset.exclude(id__in=assigned_resources)
+        return queryset

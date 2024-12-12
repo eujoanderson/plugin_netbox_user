@@ -121,19 +121,6 @@ class UserListRuleForm(NetBoxModelForm):
             'data_expiracao', 'aprovador','periodo','ambiente','recurso','justificativa','comments','tags'
         )
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        
-        # Obter IDs dos recursos já atribuídos aos grupos
-        assigned_resources = ResourceGroups.objects.values_list('recurso', flat=True)
-        
-        # Atualizar o queryset do campo 'recurso' para excluir os atribuídos
-        self.fields['recurso'].queryset = Resources.objects.exclude(id__in=assigned_resources)
-        
-        # Debugging para verificar os valores
-        print("Assigned Resources:", list(assigned_resources))
-        print("Filtered Resources:", list(self.fields['recurso'].queryset))
-
 class UserListRuleFilterForm(NetBoxModelFilterSetForm):
 
     model = ResourceAccess

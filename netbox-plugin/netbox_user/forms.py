@@ -81,9 +81,6 @@ class UserListFilterForm(NetBoxModelFilterSetForm):
         queryset=Groups.objects.all(),
         required=False,
         help_text="Adicione o usuário ao grupo",
-        #widget=APISelectMultiple(  # Adiciona o widget com botão de atualização
-        #api_url='/api/plugins/plugin-user/grouplist/'  # Endpoint da API para grupos
-        #)
     )
 
     setor = forms.ModelMultipleChoiceField(

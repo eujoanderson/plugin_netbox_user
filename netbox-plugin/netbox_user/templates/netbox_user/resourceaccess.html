@@ -28,7 +28,7 @@
             
             <tr>
               <th scope="row">Tipo de Acesso</th>
-              <td>{{ object.tipo_acesso|capfirst }}</td>
+              <td>{{ object.get_tipo_acesso_display|capfirst }}</td>
             </tr>
             <tr>
               <th scope="row">Data Concessão</th>

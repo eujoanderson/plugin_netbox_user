@@ -186,7 +186,8 @@ class UserList(NetBoxModel):
     status_user = models.CharField(
         max_length=30,
         choices=ActionChoicesStatusUserColor._choices,
-        verbose_name="Status User"
+        verbose_name="Status User",
+        default='active'
     )
     
     clone_fields = (
@@ -320,7 +321,6 @@ class ResourceAccess(NetBoxModel):
         return reverse('plugins:netbox_user:pluginuserrule', args=[self.pk])
     
     def save(self, *args, **kwargs):
-        print(f"Salvando ResourceAccess com dados: {self.__dict__}")
         if self.index is None:
             last_index = ResourceAccess.objects.filter(user=self.user).aggregate(Max('index'))['index__max']
             self.index = (last_index or 0) + 1  

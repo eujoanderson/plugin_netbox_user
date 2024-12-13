@@ -35,12 +35,16 @@ class UserListForm(NetBoxModelForm):
         
     def clean_name(self):
         name = self.cleaned_data['name'].strip()
-        name_print = UserList.objects.filter(name__iexact=name).values_list('name', flat=True)
+        instance_id = self.instance.id
 
-        if UserList.objects.filter(name__iexact=name).exists():
+        name_print = UserList.objects.filter(name__iexact=name).exclude(id=instance_id).values_list('name', flat=True)
+
+        if name_print.exists():
             for user_name in name_print:
                 raise ValidationError(f"Já existe um usuário com o nome '{user_name}', insira outro.")
+        
         return name
+
 
 class UserListBulkEditForm(NetBoxModelBulkEditForm):    
 
@@ -242,13 +246,15 @@ class ResourcesForm(NetBoxModelForm):
         )
         
     def clean_recurso(self):
-        
         recurso = self.cleaned_data['recurso'].strip()
-        name_print = Resources.objects.filter(recurso__iexact=recurso).values_list('recurso', flat=True)
+        instance_id = self.instance.id
 
-        if Resources.objects.filter(recurso__iexact=recurso).exists():
+        name_print = Resources.objects.filter(recurso__iexact=recurso).exclude(id=instance_id).values_list('recurso', flat=True)
+
+        if name_print.exists():
             for recurso_name in name_print:
                 raise ValidationError(f"Já existe um recurso com o nome '{recurso_name}', insira outro.")
+        
         return recurso
         
 class ResourcesFormFilterForm(NetBoxModelFilterSetForm):
@@ -282,14 +288,15 @@ class EnvironmentForm(NetBoxModelForm):
         )
         
     def clean_ambiente(self):
-        
         ambiente = self.cleaned_data['ambiente'].strip()
-        
-        ambiente_print = Environment.objects.filter(ambiente__iexact=ambiente).values_list('ambiente', flat=True)
+        instance_id = self.instance.id
 
-        if Environment.objects.filter(ambiente__iexact=ambiente).exists():
+        ambiente_print = Environment.objects.filter(ambiente__iexact=ambiente).exclude(id=instance_id).values_list('ambiente', flat=True)
+
+        if ambiente_print.exists():
             for ambiente_name in ambiente_print:
                 raise ValidationError(f"Já existe um ambiente com o nome '{ambiente_name}', insira outro.")
+        
         return ambiente
     
 
@@ -326,14 +333,15 @@ class GroupForm(NetBoxModelForm):
         
         
     def clean_grupo(self):
-        
         grupo = self.cleaned_data['grupo'].strip()
-        
-        grupo_print = Groups.objects.filter(grupo__iexact=grupo).values_list('grupo', flat=True)
+        instance_id = self.instance.id
 
-        if Groups.objects.filter(grupo__iexact=grupo).exists():
+        grupo_print = Groups.objects.filter(grupo__iexact=grupo).exclude(id=instance_id).values_list('grupo', flat=True)
+
+        if grupo_print.exists():
             for grupo_name in grupo_print:
                 raise ValidationError(f"Já existe um grupo com o nome '{grupo_name}', insira outro.")
+        
         return grupo
 
 class GroupsFormFilterForm(NetBoxModelFilterSetForm):
@@ -372,14 +380,15 @@ class ApproverForm(NetBoxModelForm):
         )
     
     def clean_aprovador(self):
-        
         aprovador = self.cleaned_data['aprovador'].strip()
-        
-        aprovador_print = Approver.objects.filter(aprovador__iexact=aprovador).values_list('aprovador', flat=True)
+        instance_id = self.instance.id
 
-        if Approver.objects.filter(aprovador__iexact=aprovador).exists():
+        aprovador_print = Approver.objects.filter(aprovador__iexact=aprovador).exclude(id=instance_id).values_list('aprovador', flat=True)
+
+        if aprovador_print.exists():
             for aprovador_name in aprovador_print:
                 raise ValidationError(f"Já existe um aprovador com o nome '{aprovador_name}', insira outro.")
+        
         return aprovador
 
 class ApproverFormFilterForm(NetBoxModelFilterSetForm):
@@ -418,14 +427,15 @@ class SectorForm(NetBoxModelForm):
         )
         
     def clean_setor(self):
-        
         setor = self.cleaned_data['setor'].strip()
+        instance_id = self.instance.id
         
-        setor_print = Sector.objects.filter(setor__iexact=setor).values_list('setor', flat=True)
+        setor_print = Sector.objects.filter(setor__iexact=setor).exclude(id=instance_id).values_list('setor', flat=True)
 
-        if Sector.objects.filter(setor__iexact=setor).exists():
+        if setor_print.exists():
             for setor_name in setor_print:
                 raise ValidationError(f"Já existe um setor com o nome '{setor_name}', insira outro.")
+        
         return setor
 
 class SectorFormFilterForm(NetBoxModelFilterSetForm):
